@@ -54,17 +54,3 @@ CREATE TABLE academic.chip (
     deleted_by VARCHAR(100),
     deleted_at TIMESTAMPTZ
 );
-
-CREATE TABLE academic.user_chip (
-    id_user_chip UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    id_user_app UUID NOT NULL,
-    id_chip UUID NOT NULL,
-    assignment_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    state VARCHAR(20) NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    created_by VARCHAR(100),
-    updated_at TIMESTAMPTZ,
-    updated_by VARCHAR(100),
-    deleted_by VARCHAR(100),
-    deleted_at TIMESTAMPTZ
-);
