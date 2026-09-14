@@ -1,5 +1,6 @@
-DELETE FROM security.type_document
-WHERE (name = 'CITIZENSHIP CARD' AND abbreviation = 'CC')
-   OR (name = 'FOREIGNER IDENTITY CARD' AND abbreviation = 'CE')
-   OR (name = 'IDENTITY CARD' AND abbreviation = 'TI')
-   OR (name = 'PASSPORT' AND abbreviation = 'PAS');
+DELETE FROM roleandpermission.role_permission
+WHERE id_role IN (SELECT id_role FROM roleandpermission.role WHERE name_rol IN ('APRENDIZ', 'INSTRUCTOR', 'COORDINADOR'));
+DELETE FROM roleandpermission.permission
+WHERE name_permission IN ('VIEW_OWN_PROFILE', 'EDIT_OWN_PROFILE', 'VIEW_OWN_ATTENDANCE', 'VIEW_FICHA_ATTENDANCE', 'MANAGE_USERS', 'MANAGE_ENVIRONMENTS', 'MANAGE_FICHAS', 'MANAGE_TRAINING_PROGRAMS');
+DELETE FROM roleandpermission.role
+WHERE name_rol IN ('APRENDIZ', 'INSTRUCTOR', 'COORDINADOR');

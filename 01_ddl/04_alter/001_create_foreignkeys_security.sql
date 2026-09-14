@@ -1,29 +1,6 @@
-ALTER TABLE security.user_app
-ADD CONSTRAINT fk_users_type_document
-FOREIGN KEY (id_type_document)
-REFERENCES security.type_document (id_type_document);
-
-ALTER TABLE security.credential
-ADD CONSTRAINT fk_credential_users
-FOREIGN KEY (id_user_app)
-REFERENCES security.user_app (id_user_app);
-
-ALTER TABLE security.email_verification
-ADD CONSTRAINT fk_email_verification_users
-FOREIGN KEY (id_user_app)
-REFERENCES security.user_app (id_user_app);
-
-ALTER TABLE security.password_recovery
-ADD CONSTRAINT fk_password_recovery_users
-FOREIGN KEY (id_user_app)
-REFERENCES security.user_app (id_user_app);
-
-ALTER TABLE security.user_session
-ADD CONSTRAINT fk_user_session_users
-FOREIGN KEY (id_user_app)
-REFERENCES security.user_app (id_user_app);
-
-ALTER TABLE security.user_configuration
-ADD CONSTRAINT fk_user_configuration_users
-FOREIGN KEY (id_user_app)
-REFERENCES security.user_app (id_user_app);
+ALTER TABLE security.credential ADD CONSTRAINT fk_credential_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
+ALTER TABLE security.password_recovery ADD CONSTRAINT fk_password_recovery_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
+ALTER TABLE security.user_session ADD CONSTRAINT fk_user_session_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
+ALTER TABLE security.user_configuration ADD CONSTRAINT fk_user_configuration_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
+ALTER TABLE security.user_chip ADD CONSTRAINT fk_user_chip_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
+ALTER TABLE security.user_chip ADD CONSTRAINT fk_user_chip_chip FOREIGN KEY (id_chip) REFERENCES academic.chip(id_chip);

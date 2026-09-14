@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS roleandpermission.role_permission;
-DROP TABLE IF EXISTS roleandpermission.user_role;
-DROP TABLE IF EXISTS roleandpermission.permission;
-DROP TABLE IF EXISTS roleandpermission.role;
+DROP TABLE IF EXISTS roleandpermission.role_permission CASCADE;
+DROP TABLE IF EXISTS roleandpermission.user_role CASCADE;
+DROP TABLE IF EXISTS roleandpermission.permission CASCADE;
+DROP TABLE IF EXISTS roleandpermission.role CASCADE;

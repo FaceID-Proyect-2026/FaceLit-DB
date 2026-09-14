@@ -1,95 +1,81 @@
-INSERT INTO security.type_document
-(id_type_document, name, abbreviation)
+-- V4: roles
+INSERT INTO roleandpermission.role (id_role, name_rol, created_at)
 VALUES
-(gen_random_uuid(), 'CITIZENSHIP CARD', 'CC');
-
-INSERT INTO security.type_document
-(id_type_document, name, abbreviation)
-VALUES
-(gen_random_uuid(), 'FOREIGNER IDENTITY CARD', 'CE');
-
-INSERT INTO security.type_document
-(id_type_document, name, abbreviation)
-VALUES
-(gen_random_uuid(), 'IDENTITY CARD', 'TI');
-
-INSERT INTO security.type_document
-(id_type_document, name, abbreviation)
-VALUES
-(gen_random_uuid(), 'PASSPORT', 'PAS');
-
-INSERT INTO roleandpermission.role (id_role, name_role, created_at)
-VALUES
-    (uuid_generate_v4(), 'ADMINISTRATOR', NOW()),
-    (uuid_generate_v4(), 'COORDINATOR', NOW()),
+    (uuid_generate_v4(), 'APRENDIZ', NOW()),
     (uuid_generate_v4(), 'INSTRUCTOR', NOW()),
-    (uuid_generate_v4(), 'APPRENTICE', NOW());
+    (uuid_generate_v4(), 'COORDINADOR', NOW())
+ON CONFLICT (name_rol) DO NOTHING;
 
-INSERT INTO roleandpermission.permission (
-    id_permission,
-    name_permission,
-    description,
-    created_at
-)
+-- V4: permisos, uno por cada accion real que quedo definida por modulo/rol en el diseño
+INSERT INTO roleandpermission.permission (id_permission, name_permission, descripcion, created_at)
 VALUES
-(uuid_generate_v4(), 'MANAGE_SYSTEM', 'Gestionar sistema', NOW()),
-(uuid_generate_v4(), 'VIEW_OWN_PROFILE', 'Ver perfil propio', NOW()),
-(uuid_generate_v4(), 'EDIT_OWN_PROFILE', 'Editar perfil propio', NOW()),
-(uuid_generate_v4(), 'VIEW_OWN_ATTENDANCE', 'Ver asistencia propia', NOW()),
-(uuid_generate_v4(), 'VIEW_FICHA_ATTENDANCE', 'Ver asistencia de ficha', NOW()),
-(uuid_generate_v4(), 'MANAGE_SCHEDULES', 'Gestionar horarios', NOW()),
-(uuid_generate_v4(), 'MANAGE_USERS', 'Gestionar usuarios', NOW()),
-(uuid_generate_v4(), 'MANAGE_ROLES', 'Gestionar roles', NOW()),
-(uuid_generate_v4(), 'MANAGE_ENVIRONMENTS', 'Gestionar ambientes', NOW()),
-(uuid_generate_v4(), 'MANAGE_FICHAS', 'Gestionar fichas', NOW()),
-(uuid_generate_v4(), 'MANAGE_TRAINING_PROGRAMS', 'Gestionar programas de formacion', NOW());
+    -- Perfil y Personalizacion (RF-9) - los 3 roles
+    (uuid_generate_v4(), 'VIEW_OWN_PROFILE', 'Ver perfil propio (solo lectura)', NOW()),
+    (uuid_generate_v4(), 'MANAGE_OWN_CONFIGURATION', 'Configurar idioma, tema y notificaciones propias', NOW()),
 
-INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assignment_date, assigned_at, created_at)
-SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW(), NOW()
+    -- Notificaciones (RF-8) - los 3 roles, cada uno ve solo las suyas
+    (uuid_generate_v4(), 'VIEW_OWN_NOTIFICATIONS', 'Ver y marcar como leidas las notificaciones propias', NOW()),
+
+    -- Reconocimiento Facial (RF-5.4) - Aprendiz
+    (uuid_generate_v4(), 'VIEW_OWN_ATTENDANCE', 'Ver la asistencia propia', NOW()),
+    (uuid_generate_v4(), 'REGISTER_FACE', 'Registrar el rostro propio (una sola vez)', NOW()),
+    (uuid_generate_v4(), 'REQUEST_FACE_RESET', 'Solicitar restablecimiento del registro facial propio', NOW()),
+
+    -- Gestion de Ambiente / Sesion de Reconocimiento Facial - Instructor
+    (uuid_generate_v4(), 'CONFIGURE_RECOGNITION_SESSION', 'Configurar y editar sesiones de reconocimiento facial (ambiente, ficha, instructor a cargo, ajustes)', NOW()),
+    (uuid_generate_v4(), 'VIEW_FICHA_ATTENDANCE', 'Ver la asistencia de las fichas asignadas', NOW()),
+
+    -- Gestion Academica (RF-3) y Gestion de Usuarios - Coordinador
+    (uuid_generate_v4(), 'VIEW_ALL_ATTENDANCE', 'Ver la asistencia de cualquier programa, ficha o aprendiz', NOW()),
+    (uuid_generate_v4(), 'MANAGE_ACADEMIC', 'Crear, editar, desactivar y trasladar programas, fichas, aprendices e instructores (CSV y manual)', NOW()),
+    (uuid_generate_v4(), 'MANAGE_USERS', 'Crear y editar usuarios con cualquier rol (Aprendiz, Instructor o Coordinador)', NOW()),
+    (uuid_generate_v4(), 'RESOLVE_FACE_RESET_REQUEST', 'Aceptar o rechazar solicitudes de restablecimiento de reconocimiento facial', NOW())
+ON CONFLICT (name_permission) DO NOTHING;
+
+-- APRENDIZ
+INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assigned_at, created_at)
+SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW()
 FROM roleandpermission.role r
 CROSS JOIN roleandpermission.permission p
-WHERE r.name_role = 'ADMINISTRATOR'
-AND p.name_permission IN (
-    'MANAGE_SYSTEM'
-);
+WHERE r.name_rol = 'APRENDIZ'
+  AND p.name_permission IN (
+      'VIEW_OWN_PROFILE',
+      'MANAGE_OWN_CONFIGURATION',
+      'VIEW_OWN_NOTIFICATIONS',
+      'VIEW_OWN_ATTENDANCE',
+      'REGISTER_FACE',
+      'REQUEST_FACE_RESET'
+  )
+ON CONFLICT (id_role, id_permission) DO NOTHING;
 
-INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assignment_date, assigned_at, created_at)
-SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW(), NOW()
+-- INSTRUCTOR
+INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assigned_at, created_at)
+SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW()
 FROM roleandpermission.role r
 CROSS JOIN roleandpermission.permission p
-WHERE r.name_role = 'COORDINATOR'
-AND p.name_permission IN (
-    'VIEW_OWN_PROFILE',
-    'EDIT_OWN_PROFILE',
-    'VIEW_FICHA_ATTENDANCE',
-    'MANAGE_SCHEDULES',
-    'MANAGE_USERS',
-    'MANAGE_ROLES',
-    'MANAGE_ENVIRONMENTS',
-    'MANAGE_FICHAS',
-    'MANAGE_TRAINING_PROGRAMS'
-);
+WHERE r.name_rol = 'INSTRUCTOR'
+  AND p.name_permission IN (
+      'VIEW_OWN_PROFILE',
+      'MANAGE_OWN_CONFIGURATION',
+      'VIEW_OWN_NOTIFICATIONS',
+      'CONFIGURE_RECOGNITION_SESSION',
+      'VIEW_FICHA_ATTENDANCE'
+  )
+ON CONFLICT (id_role, id_permission) DO NOTHING;
 
-INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assignment_date, assigned_at, created_at)
-SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW(), NOW()
+-- COORDINADOR
+INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assigned_at, created_at)
+SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW()
 FROM roleandpermission.role r
 CROSS JOIN roleandpermission.permission p
-WHERE r.name_role = 'INSTRUCTOR'
-AND p.name_permission IN (
-    'VIEW_OWN_PROFILE',
-    'EDIT_OWN_PROFILE',
-    'VIEW_OWN_ATTENDANCE',
-    'VIEW_FICHA_ATTENDANCE',
-    'MANAGE_SCHEDULES'
-);
-
-INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assignment_date, assigned_at, created_at)
-SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW(), NOW()
-FROM roleandpermission.role r
-CROSS JOIN roleandpermission.permission p
-WHERE r.name_role = 'APPRENTICE'
-AND p.name_permission IN (
-    'VIEW_OWN_PROFILE',
-    'EDIT_OWN_PROFILE',
-    'VIEW_OWN_ATTENDANCE'
-);
+WHERE r.name_rol = 'COORDINADOR'
+  AND p.name_permission IN (
+      'VIEW_OWN_PROFILE',
+      'MANAGE_OWN_CONFIGURATION',
+      'VIEW_OWN_NOTIFICATIONS',
+      'VIEW_ALL_ATTENDANCE',
+      'MANAGE_ACADEMIC',
+      'MANAGE_USERS',
+      'RESOLVE_FACE_RESET_REQUEST'
+  )
+ON CONFLICT (id_role, id_permission) DO NOTHING;

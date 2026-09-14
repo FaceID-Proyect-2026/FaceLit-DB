@@ -1,121 +1,57 @@
 databaseChangeLog:
   - changeSet:
-      id: 4ee50751-3398-40cc-ab5e-f2ae067d1b78
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,security"
-      comment: "Adds foreign keys to the security tables."
+      id: facelit-foreignkeys-security
+      author: facelit
+      labels: "ddl,alter,foreignkeys,security"
       changes:
-        - sqlFile:
-            path: 001_create_foreignkeys_security.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 001_create_foreignkeys_security.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/001_create_foreignkeys_security.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/001_create_foreignkeys_security.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 84812250-7818-4570-9d7c-56d94f287470
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,roleandpermission"
-      comment: "Adds foreign keys to the roleandpermission tables."
+      id: facelit-foreignkeys-roleandpermission
+      author: facelit
+      labels: "ddl,alter,foreignkeys,roleandpermission"
       changes:
-        - sqlFile:
-            path: 002_create_foreignkeys_roleandpermissions_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 002_create_foreignkeys_roleandpermissions_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/002_create_foreignkeys_roleandpermissions_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/002_create_foreignkeys_roleandpermissions_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 6ad3f941-e2f0-4480-9a5e-d158f0ec4c6e
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,academic"
-      comment: "Adds foreign keys to the academic tables."
+      id: facelit-foreignkeys-academic
+      author: facelit
+      labels: "ddl,alter,foreignkeys,academic"
       changes:
-        - sqlFile:
-            path: 003_create_foreignkeys_academic_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 003_create_foreignkeys_academic_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/003_create_foreignkeys_academic_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/003_create_foreignkeys_academic_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: e2902862-8830-4fb5-aed3-87143d2de417
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,environment"
-      comment: "Adds foreign keys to the environment tables."
+      id: facelit-foreignkeys-environment
+      author: facelit
+      labels: "ddl,alter,foreignkeys,environment"
       changes:
-        - sqlFile:
-            path: 004_create_foreignkeys_environment_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 004_create_foreignkeys_environment_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/004_create_foreignkeys_environment_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/004_create_foreignkeys_environment_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: b35e4a2b-812d-4326-8be7-52fead55e996
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,schedule"
-      comment: "Adds foreign keys to the schedule tables."
+      id: facelit-foreignkeys-facialrecognition
+      author: facelit
+      labels: "ddl,alter,foreignkeys,facialrecognition"
       changes:
-        - sqlFile:
-            path: 005_create_foreignkeys_schedule_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 005_create_foreignkeys_face_recognition.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/005_create_foreignkeys_schedule_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/005_create_foreignkeys_face_recognition.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 2a9bf5bb-68ce-44bc-b9a9-2e7861f8f29d
-      author: pemarival
-      labels: "BD-01-dev,ddl,foreignkeys,face-recognition"
-      comment: "Adds foreign keys to the face recognition tables."
+      id: facelit-foreignkeys-notification
+      author: facelit
+      labels: "ddl,alter,foreignkeys,notification"
       changes:
-        - sqlFile:
-            path: 006_create_foreignkeys_face_recognition.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 006_create_foreignkeys_notification_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/006_create_foreignkeys_face_recognition_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/006_create_foreignkeys_notification_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 4d1f0bc1-8f6b-4f3d-8f0e-7fb7dc4f0e21
-      author: pemarival
-      labels: "BD-07-dev,ddl,base,notification"
-      comment: Creates the foreign keys for the notification module.
+      id: facelit-foreignkeys-legal
+      author: facelit
+      labels: "ddl,alter,foreignkeys,legal"
       changes:
-        - sqlFile:
-            path: 007_create_foreignkeys_notification.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 007_create_foreignkeys_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/007_create_foreignkeys_notification_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-  - changeSet:
-      id: 3b48c1e3-4bd9-494d-b60b-6f82273d325a
-      author: pemarival
-      labels: "BD-01-dev,dml,foreignkeys,legal"
-      comment: "Adds foreign keys to the legal tables."
-      changes:
-        - sqlFile:
-            path: 008_create_foreignkeys_legal_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
-      rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/04_alter/008_create_foreignkeys_legal_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/007_create_foreignkeys_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
