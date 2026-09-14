@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 5dd6d1f2-9fe1-4a31-b5d6-e3551eae3594
-      author: pemarival
-      labels: "BD-01-dev,dml,base,initial seed "
-      comment: Initial data for the tables.
+      id: facelit-model-seed
+      author: facelit
+      labels: "dml,inserts,seed"
+      comment: Initial roles, permissions and assignments for the model.
       changes:
         - sqlFile:
             path: seed.sql

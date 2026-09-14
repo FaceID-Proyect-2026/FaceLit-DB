@@ -1,122 +1,57 @@
 databaseChangeLog:
   - changeSet:
-      id: b10af65b-9946-4f3c-90e6-369fd4b29ea7
-      author: pemarival
-      labels: "fix-db-order,ddl,base,security"
-      comment: Creates the baseline indexes for the security module.
+      id: facelit-indexes-security
+      author: facelit
+      labels: "ddl,indexes,security"
       changes:
-        - sqlFile:
-            path: 001_create_security_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 001_create_security_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/001_create_security_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/001_create_security_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: f6cc9f91-dc75-4638-9753-63f487830cd4
-      author: pemarival
-      labels: "fix-db-order,ddl,base,roleandpermission"
-      comment: Creates the baseline indexes for the roles and permissions module.
+      id: facelit-indexes-roleandpermission
+      author: facelit
+      labels: "ddl,indexes,roleandpermission"
       changes:
-        - sqlFile:
-            path: 002_create_roleandpermissions_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 002_create_roleandpermissions_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/002_create_roleandpermissions_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/002_create_roleandpermissions_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: cda52d6a-00fa-4877-9d08-0660840018c4
-      author: pemarival
-      labels: "fix-db-order,ddl,base,academic"
-      comment: Creates the baseline indexes for the academic module.
+      id: facelit-indexes-academic
+      author: facelit
+      labels: "ddl,indexes,academic"
       changes:
-        - sqlFile:
-            path: 003_create_academic_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 003_create_academic_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/003_create_academic_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false   
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/003_create_academic_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: fa2eb44d-e976-4e54-b7b4-3fe1df239c86
-      author: pemarival
-      labels: "fix-db-order,ddl,base,environment"
-      comment: Creates the baseline indexes for the environment module.
+      id: facelit-indexes-environment
+      author: facelit
+      labels: "ddl,indexes,environment"
       changes:
-        - sqlFile:
-            path: 004_create_environment_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 004_create_environment_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/004_create_environment_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/004_create_environment_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: b22ff444-4794-41f9-9950-9155c2521c19
-      author: pemarival
-      labels: "fix-db-order,ddl,base,schedule"
-      comment: Creates the baseline indexes for the schedule module.
+      id: facelit-indexes-facialrecognition
+      author: facelit
+      labels: "ddl,indexes,facialrecognition"
       changes:
-        - sqlFile:
-            path: 005_create_schedule_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 005_create_face_recognition_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/005_create_schedule_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false         
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/005_create_face_recognition_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 84caf681-c3c6-40f1-9314-8238be776eda
-      author: pemarival
-      labels: "fix-db-order,ddl,base,legal"
-      comment: Creates the baseline indexes for the legal module.
+      id: facelit-indexes-notification
+      author: facelit
+      labels: "ddl,indexes,notification"
       changes:
-        - sqlFile:
-            path: 008_create_legal_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 006_create_notification_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/008_create_legal_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/006_create_notification_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 6d91e4a7-2c58-4b83-9f16-7e05a3c82149
-      author: pemarival
-      labels: "HU-08-dev,ddl,indexes,academic"
-      comment: Creates indexes for the transfer request table.
+      id: facelit-indexes-legal
+      author: facelit
+      labels: "ddl,indexes,legal"
       changes:
-        - sqlFile:
-            path: 009_create_transfer_request_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 007_create_legal_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/009_create_transfer_request_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-  - changeSet:
-      id: 7b4e2c91-6a35-4d80-b217-9f63e5c04872
-      author: pemarival
-      labels: "HU-08-dev,ddl,indexes,security"
-      comment: Creates indexes for the document change log table.
-      changes:
-        - sqlFile:
-            path: 010_create_document_change_log_indexes.sql
-            relativeToChangelogFile: true
-            stripComments: false
-      rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/10_indexes/010_create_document_change_log_indexes.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/007_create_legal_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}

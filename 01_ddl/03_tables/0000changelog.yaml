@@ -1,152 +1,57 @@
 databaseChangeLog:
   - changeSet:
-      id: 6bc8aa7a-4647-4e7a-a881-7bfe4cb7bf78
-      author: pemarival
-      labels: "HU-01-dev,ddl,base,security"
-      comment: Creates the baseline tables for the security module.
+      id: facelit-model-security
+      author: facelit
+      labels: "ddl,tables,security"
       changes:
-        - sqlFile:
-            path: 001_create_security_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 001_create_security_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/001_create_security_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/001_create_security_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: b1e918f2-8cea-4403-8255-21ff517fe3bd
-      author: pemarival
-      labels: "HU-02-dev,ddl,base,roleandpermission"
-      comment: Creates the baseline tables for the roles and permissions module.
+      id: facelit-model-roleandpermission
+      author: facelit
+      labels: "ddl,tables,roleandpermission"
       changes:
-        - sqlFile:
-            path: 002_create_roleandpermissions_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 002_create_roleandpermissions_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/002_create_roleandpermissions_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/002_create_roleandpermissions_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 3d433cff-a1ec-43be-a55d-40441f1b5ffd
-      author: pemarival
-      labels: "HU-03-dev,ddl,base,academic"
-      comment: Creates the baseline tables for the academic module.
+      id: facelit-model-academic
+      author: facelit
+      labels: "ddl,tables,academic"
       changes:
-        - sqlFile:
-            path: 003_create_academic_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 003_create_academic_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/003_create_academic_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/003_create_academic_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: ad6e0e60-20ad-47b5-878d-8932dfaf3339
-      author: pemarival
-      labels: "HU-04-dev,ddl,base,environment"
-      comment: Creates the baseline tables for the environment module.
+      id: facelit-model-environment
+      author: facelit
+      labels: "ddl,tables,environment"
       changes:
-        - sqlFile:
-            path: 004_create_environment_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 004_create_environment_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/004_create_environment_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/004_create_environment_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 91d9d811-cf37-4360-921d-dd2279dedfaf
-      author: pemarival
-      labels: "HU-05-dev,ddl,base,schedule"
-      comment: Creates the baseline tables for the schedule module.
+      id: facelit-model-facialrecognition
+      author: facelit
+      labels: "ddl,tables,facialrecognition"
       changes:
-        - sqlFile:
-            path: 005_create_schedule_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 005_create_face_recognition_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/005_create_schedule_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/005_create_face_recognition_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 7c1f37b0-8b49-4d26-b9e7-d4f7a2a1e3d9
-      author: pemarival
-      labels: "HU-06-dev,ddl,base,face-recognition"
-      comment: Creates the baseline tables for the face recognition module.
+      id: facelit-model-notification
+      author: facelit
+      labels: "ddl,tables,notification"
       changes:
-        - sqlFile:
-            path: 006_create_face_recognition_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 006_create_notification_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/006_create_face_recognition_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/006_create_notification_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: 8e0f6d8f-9b52-4b86-80f6-5f6d2ed0e8af
-      author: pemarival
-      labels: "HU-07-dev,ddl,base,notification"
-      comment: Creates the baseline tables for the notification module.
+      id: facelit-model-legal
+      author: facelit
+      labels: "ddl,tables,legal"
       changes:
-        - sqlFile:
-            path: 007_create_notification_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: 007_create_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/007_create_notification_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-  - changeSet:
-      id: 2fd0afee-3023-47a9-98a8-96d3558058c5
-      author: pemarival
-      labels: "HU-08-dev,ddl,base,legal"
-      comment: Creates the baseline tables for the legal module.
-      changes:
-        - sqlFile:
-            path: 008_create_legal_tables.sql
-            relativeToChangelogFile: true
-            stripComments: false
-      rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/008_create_legal_tables.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-
-  - changeSet:
-      id: 5c7e1a92-84d3-4f6b-a218-9d53e7c04176
-      author: pemarival
-      labels: "HU-08-dev,ddl,base,academic"
-      comment: Creates the transfer request table for the academic module.
-      changes:
-        - sqlFile:
-            path: 009_create_transfer_request_table.sql
-            relativeToChangelogFile: true
-            stripComments: false
-      rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/009_create_transfer_request_table.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
-  - changeSet:
-      id: 9e3b7c52-1a64-4d89-b027-6f41c8e59372
-      author: pemarival
-      labels: "HU-08-dev,ddl,base,security"
-      comment: Creates the document change log table for the security module.
-      changes:
-        - sqlFile:
-            path: 010_create_document_change_log_table.sql
-            relativeToChangelogFile: true
-            stripComments: false
-      rollback:
-        - sqlFile:
-            path: ../../05_rollbacks/01_ddl/03_tables/010_create_document_change_log_table.rollback.sql
-            relativeToChangelogFile: true
-            stripComments: false
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/007_create_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}

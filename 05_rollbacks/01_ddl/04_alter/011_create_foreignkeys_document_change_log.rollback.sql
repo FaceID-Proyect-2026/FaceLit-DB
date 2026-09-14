@@ -1,2 +1,0 @@
-ALTER TABLE security.document_change_log
-DROP CONSTRAINT fk_document_change_log_user;

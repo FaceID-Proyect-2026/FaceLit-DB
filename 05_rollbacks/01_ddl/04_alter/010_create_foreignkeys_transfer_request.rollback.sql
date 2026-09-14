@@ -1,8 +1,0 @@
-ALTER TABLE academic.transfer_request
-DROP CONSTRAINT fk_transfer_request_user;
-
-ALTER TABLE academic.transfer_request
-DROP CONSTRAINT fk_transfer_request_current_chip;
-
-ALTER TABLE academic.transfer_request
-DROP CONSTRAINT fk_transfer_request_requested_chip;
