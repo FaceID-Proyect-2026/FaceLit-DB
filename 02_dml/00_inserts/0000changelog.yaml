@@ -14,3 +14,20 @@ databaseChangeLog:
             path: ../../05_rollbacks/02_dml/00_inserts/seed.rollback.sql
             relativeToChangelogFile: true
             stripComments: false
+  - changeSet:
+      id: 02-seed-coordinator
+      author: facelit
+      labels: "dml,inserts,seed,coordinator"
+      comment: Seed del primer Coordinador (idempotente por number_document).
+      changes:
+        - sqlFile:
+            path: 002_seed_coordinator.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/02_dml/00_inserts/002_seed_coordinator.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false
