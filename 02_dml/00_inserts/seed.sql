@@ -1,9 +1,9 @@
 -- V4: roles
 INSERT INTO roleandpermission.role (id_role, name_rol, created_at)
 VALUES
-    (uuid_generate_v4(), 'APRENDIZ', NOW()),
+    (uuid_generate_v4(), 'APPRENTICE', NOW()),
     (uuid_generate_v4(), 'INSTRUCTOR', NOW()),
-    (uuid_generate_v4(), 'COORDINADOR', NOW())
+    (uuid_generate_v4(), 'COORDINATOR', NOW())
 ON CONFLICT (name_rol) DO NOTHING;
 
 -- V4: permisos, uno por cada accion real que quedo definida por modulo/rol en el diseño
@@ -32,12 +32,12 @@ VALUES
     (uuid_generate_v4(), 'RESOLVE_FACE_RESET_REQUEST', 'Aceptar o rechazar solicitudes de restablecimiento de reconocimiento facial', NOW())
 ON CONFLICT (name_permission) DO NOTHING;
 
--- APRENDIZ
+-- APPRENTICE
 INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assigned_at, created_at)
 SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW()
 FROM roleandpermission.role r
 CROSS JOIN roleandpermission.permission p
-WHERE r.name_rol = 'APRENDIZ'
+WHERE r.name_rol = 'APPRENTICE'
   AND p.name_permission IN (
       'VIEW_OWN_PROFILE',
       'MANAGE_OWN_CONFIGURATION',
@@ -63,12 +63,12 @@ WHERE r.name_rol = 'INSTRUCTOR'
   )
 ON CONFLICT (id_role, id_permission) DO NOTHING;
 
--- COORDINADOR
+-- COORDINATOR
 INSERT INTO roleandpermission.role_permission (id_role_permission, id_role, id_permission, assigned_at, created_at)
 SELECT uuid_generate_v4(), r.id_role, p.id_permission, NOW(), NOW()
 FROM roleandpermission.role r
 CROSS JOIN roleandpermission.permission p
-WHERE r.name_rol = 'COORDINADOR'
+WHERE r.name_rol = 'COORDINATOR'
   AND p.name_permission IN (
       'VIEW_OWN_PROFILE',
       'MANAGE_OWN_CONFIGURATION',

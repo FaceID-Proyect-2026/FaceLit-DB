@@ -1,1 +1,18 @@
-databaseChangeLog: []
+databaseChangeLog:
+  - changeSet:
+      id: rename-role-values-to-english
+      author: facelit
+      labels: "dml,patches,roles"
+      comment: Rename role values to match the English backend enum constants.
+      changes:
+        - sqlFile:
+            path: 001_rename_role_values_to_english.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: 001_rename_role_values_to_english.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false

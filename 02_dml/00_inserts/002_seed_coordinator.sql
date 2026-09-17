@@ -1,7 +1,7 @@
 -- 02_dml/00_inserts/002_seed_coordinator.sql
 -- Semilla del primer Coordinador -- VERSION CON DATOS QUEMADOS.
 -- Idempotente: si ya existe un user_app con ese numero de documento, no inserta de nuevo.
--- Requiere que el rol COORDINADOR ya exista en roleandpermission.role (lo crea seed.sql).
+-- Requiere que el rol COORDINATOR ya exista en roleandpermission.role (lo crea seed.sql).
 
 DO $$
 DECLARE
@@ -17,16 +17,16 @@ DECLARE
     -- '$Maria123!' que tenias antes NO es un hash BCrypt, es la contraseña en texto plano
     -- puesta a mano -- eso es justo lo que el flujo pide evitar. Genera uno real
     -- (ver LEEME del zip anterior: node -e "console.log(require('bcryptjs').hashSync('...',10))")
-    v_password_hash  VARCHAR := '$2a$10$rz5fW9yLiiKGSpBXzQrpL.z/BCgub96yxkwQq9BLVnn4hPwsfADSm';
+    v_password_hash  VARCHAR := '$2a$10$UP6BA.bikKynqOq/1EtNDemf62k6YcDVWikPtbt8IybikbQvglKgy';
     -- ================================================================
 
 BEGIN
     SELECT id_role INTO v_id_role
     FROM roleandpermission.role
-    WHERE name_rol = 'COORDINADOR';
+    WHERE name_rol = 'COORDINATOR';
 
     IF v_id_role IS NULL THEN
-        RAISE EXCEPTION 'No existe el rol COORDINADOR en roleandpermission.role. Ejecuta primero el changeset facelit-model-seed.';
+        RAISE EXCEPTION 'No existe el rol COORDINATOR en roleandpermission.role. Ejecuta primero el changeset facelit-model-seed.';
     END IF;
 
     SELECT id_user_app INTO v_id_user_app
