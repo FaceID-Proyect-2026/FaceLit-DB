@@ -32,7 +32,7 @@ CREATE TABLE facialrecognition.facial_event (
     id_record_environment UUID NOT NULL,
     id_device UUID NOT NULL,
     event_datetime TIMESTAMPTZ NOT NULL,
-    event_type VARCHAR(20) NOT NULL CHECK (event_type IN ('ENTRADA', 'SALIDA')),
+    event_type VARCHAR(20) NOT NULL CHECK (event_type IN ('ENTRY', 'EXIT')),
     recognition_result VARCHAR(20) NOT NULL,
     send_status VARCHAR(20) NOT NULL,
     origin VARCHAR(10) NOT NULL CHECK (origin IN ('PC', 'MOBILE')),

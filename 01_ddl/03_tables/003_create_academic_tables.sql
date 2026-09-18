@@ -15,7 +15,7 @@ CREATE TABLE academic.program (
 CREATE TABLE academic.instructor (
     id_instructor UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_user_app UUID NOT NULL UNIQUE,
-    instructor_type VARCHAR(20) NOT NULL CHECK (instructor_type IN ('ESPECIFICO', 'TRANSVERSAL')),
+    instructor_type VARCHAR(20) NOT NULL CHECK (instructor_type IN ('SPECIFIC', 'CROSS-CUTTING')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_by VARCHAR(100), updated_at TIMESTAMPTZ, updated_by VARCHAR(100), deleted_by VARCHAR(100), deleted_at TIMESTAMPTZ
 );
@@ -54,3 +54,25 @@ CREATE TABLE academic.chip (
     deleted_by VARCHAR(100),
     deleted_at TIMESTAMPTZ
 );
+
+CREATE TABLE academic.csv_pending_transfer (
+    id_pending_transfer UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_user_app UUID NOT NULL REFERENCES security.user_app(id_user_app),
+    id_chip_current UUID NOT NULL REFERENCES academic.chip(id_chip),
+    id_chip_proposed UUID NOT NULL REFERENCES academic.chip(id_chip),
+    source_row_number INTEGER NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_at TIMESTAMPTZ,
+    updated_by VARCHAR(100),
+    deleted_by VARCHAR(100),
+    deleted_at TIMESTAMPTZ,
+    resolved_at TIMESTAMPTZ,
+    resolved_by VARCHAR(100),
+    CONSTRAINT chk_csv_pending_transfer_status CHECK (status IN ('PENDING', 'ACCEPTED', 'CANCELLED'))
+);
+
+CREATE UNIQUE INDEX uq_pending_transfer_active
+ON academic.csv_pending_transfer (id_user_app)
+WHERE status = 'PENDING';
