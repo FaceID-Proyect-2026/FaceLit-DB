@@ -17,7 +17,7 @@ DECLARE
     -- '$Maria123!' que tenias antes NO es un hash BCrypt, es la contraseña en texto plano
     -- puesta a mano -- eso es justo lo que el flujo pide evitar. Genera uno real
     -- (ver LEEME del zip anterior: node -e "console.log(require('bcryptjs').hashSync('...',10))")
-    v_password_hash  VARCHAR := '$2a$10$UP6BA.bikKynqOq/1EtNDemf62k6YcDVWikPtbt8IybikbQvglKgy';
+    v_password_hash  VARCHAR := '$2a$10$Oe.5OZVxvcu2Mt1RuGMU6ukZ7BcVQ7vRUtsvISbY6UYvzEsBGv1g.';
     -- ================================================================
 
 BEGIN
