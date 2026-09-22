@@ -48,6 +48,14 @@ databaseChangeLog:
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/006_create_foreignkeys_notification_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
+      id: facelit-program-audit-dates
+      author: facelit
+      labels: "ddl,alter,academic,audit"
+      changes:
+        - sqlFile: {path: 008_program_audit_dates.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/008_program_audit_dates.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
       id: facelit-foreignkeys-legal
       author: facelit
       labels: "ddl,alter,foreignkeys,legal"
@@ -55,3 +63,11 @@ databaseChangeLog:
         - sqlFile: {path: 007_create_foreignkeys_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/007_create_foreignkeys_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-chip-audit-dates
+      author: facelit
+      labels: ddl,alter,academic,audit
+      changes:
+        - sqlFile: {path: 009_chip_audit_dates.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/009_chip_audit_dates.rollback.sql, relativeToChangelogFile: true, stripComments: false}
