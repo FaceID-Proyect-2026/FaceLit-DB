@@ -3,7 +3,7 @@ CREATE TABLE security.user_app(
     first_name VARCHAR(60) NOT NULL,
     last_name VARCHAR(60) NOT NULL,
     account_status VARCHAR(20) NOT NULL,
-    number_document VARCHAR(10) NOT NULL UNIQUE,
+    number_document VARCHAR(15) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_by VARCHAR(100),
     updated_at TIMESTAMPTZ,
