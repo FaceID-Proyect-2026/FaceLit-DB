@@ -86,3 +86,11 @@ databaseChangeLog:
         - sqlFile: {path: 010_user_document_length.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/010_user_document_length.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-environment-state-capacity-unique
+      author: facelit
+      labels: ddl,alter,environment
+      changes:
+        - sqlFile: {path: 011_environment_state_capacity_unique.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/011_environment_state_capacity_unique.rollback.sql, relativeToChangelogFile: true, stripComments: false}
