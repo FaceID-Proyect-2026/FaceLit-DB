@@ -1,5 +1,12 @@
 databaseChangeLog:
   - changeSet:
+      id: facelit-face-profile-photo
+      author: facelit
+      changes:
+        - sqlFile: {path: 010_face_profile_photo.sql, relativeToChangelogFile: true}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/010_face_profile_photo.rollback.sql, relativeToChangelogFile: true}
+  - changeSet:
       id: facelit-foreignkeys-security
       author: facelit
       labels: "ddl,alter,foreignkeys,security"
