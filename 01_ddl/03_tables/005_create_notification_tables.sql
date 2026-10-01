@@ -2,12 +2,15 @@ CREATE TABLE notification.notification (
     id_notification UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_user_app UUID NOT NULL,
     id_facial_event UUID NULL,
+    notification_type VARCHAR(60) NOT NULL DEFAULT 'academic_delete_blocked',
     category VARCHAR(30) NOT NULL CHECK (category IN ('SEGURIDAD', 'ACADEMICO', 'ASISTENCIA', 'RECONOCIMIENTO_FACIAL', 'TRASLADO')),
+    title VARCHAR(120) NOT NULL DEFAULT 'Notificacion',
     message TEXT NOT NULL,
     channel VARCHAR(15) NOT NULL CHECK (channel IN ('APP', 'APP_EMAIL')),
     read_status BOOLEAN NOT NULL DEFAULT FALSE,
     read_at TIMESTAMPTZ,
     reference_entity VARCHAR(50), reference_id UUID,
+    metadata_json TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

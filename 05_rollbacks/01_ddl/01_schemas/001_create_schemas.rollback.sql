@@ -1,6 +1,5 @@
 DROP SCHEMA IF EXISTS legal;
 DROP SCHEMA IF EXISTS notification;
-DROP SCHEMA IF EXISTS facialrecognition;
 DROP SCHEMA IF EXISTS environment;
 DROP SCHEMA IF EXISTS academic;
 DROP SCHEMA IF EXISTS roleandpermission;

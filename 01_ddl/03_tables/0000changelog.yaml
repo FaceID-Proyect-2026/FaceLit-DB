@@ -32,26 +32,18 @@ databaseChangeLog:
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/004_create_environment_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: facelit-model-facialrecognition
-      author: facelit
-      labels: "ddl,tables,facialrecognition"
-      changes:
-        - sqlFile: {path: 005_create_face_recognition_tables.sql, relativeToChangelogFile: true, stripComments: false}
-      rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/005_create_face_recognition_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
-  - changeSet:
       id: facelit-model-notification
       author: facelit
       labels: "ddl,tables,notification"
       changes:
-        - sqlFile: {path: 006_create_notification_tables.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: 005_create_notification_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/006_create_notification_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/005_create_notification_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
       id: facelit-model-legal
       author: facelit
       labels: "ddl,tables,legal"
       changes:
-        - sqlFile: {path: 007_create_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: 006_create_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/007_create_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/006_create_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}

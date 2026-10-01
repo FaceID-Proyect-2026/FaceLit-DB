@@ -32,26 +32,18 @@ databaseChangeLog:
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/004_create_environment_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
-      id: facelit-indexes-facialrecognition
-      author: facelit
-      labels: "ddl,indexes,facialrecognition"
-      changes:
-        - sqlFile: {path: 005_create_face_recognition_indexes.sql, relativeToChangelogFile: true, stripComments: false}
-      rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/005_create_face_recognition_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
-  - changeSet:
       id: facelit-indexes-notification
       author: facelit
       labels: "ddl,indexes,notification"
       changes:
-        - sqlFile: {path: 006_create_notification_indexes.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: 005_create_notification_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/006_create_notification_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/005_create_notification_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
   - changeSet:
       id: facelit-indexes-legal
       author: facelit
       labels: "ddl,indexes,legal"
       changes:
-        - sqlFile: {path: 007_create_legal_indexes.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: 006_create_legal_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/007_create_legal_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/006_create_legal_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
