@@ -47,3 +47,11 @@ databaseChangeLog:
         - sqlFile: {path: 006_create_legal_tables.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/006_create_legal_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-model-facialrecognition
+      author: facelit
+      labels: "ddl,tables,facialrecognition"
+      changes:
+        - sqlFile: {path: 007_create_facialrecognition_tables.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/03_tables/007_create_facialrecognition_tables.rollback.sql, relativeToChangelogFile: true, stripComments: false}

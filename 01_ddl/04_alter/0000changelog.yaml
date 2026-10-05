@@ -87,3 +87,11 @@ databaseChangeLog:
         - sqlFile: {path: 011_notification_catalog_fields.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/011_notification_catalog_fields.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-foreignkeys-facialrecognition
+      author: facelit
+      labels: ddl,alter,foreignkeys,facialrecognition
+      changes:
+        - sqlFile: {path: 012_create_foreignkeys_facialrecognition.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/012_create_foreignkeys_facialrecognition.rollback.sql, relativeToChangelogFile: true, stripComments: false}
