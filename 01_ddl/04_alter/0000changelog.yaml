@@ -95,3 +95,11 @@ databaseChangeLog:
         - sqlFile: {path: 012_create_foreignkeys_facialrecognition.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/012_create_foreignkeys_facialrecognition.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-user-face-embedding-array
+      author: facelit
+      labels: ddl,alter,facialrecognition
+      changes:
+        - sqlFile: {path: 013_user_face_embedding_array.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/013_user_face_embedding_array.rollback.sql, relativeToChangelogFile: true, stripComments: false}
