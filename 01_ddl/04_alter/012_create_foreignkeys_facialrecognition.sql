@@ -1,4 +1,5 @@
 ALTER TABLE facialrecognition.device ADD CONSTRAINT fk_device_environment FOREIGN KEY (id_environment) REFERENCES environment.environment(id_environment);
+ALTER TABLE environment.record_environment ADD CONSTRAINT fk_record_environment_device FOREIGN KEY (id_device) REFERENCES facialrecognition.device(id_device);
 ALTER TABLE facialrecognition.user_face ADD CONSTRAINT fk_user_face_user FOREIGN KEY (id_apprentice) REFERENCES academic.apprentice(id_apprentice);
 ALTER TABLE facialrecognition.facial_event ADD CONSTRAINT fk_facial_event_record_environment FOREIGN KEY (id_record_environment) REFERENCES environment.record_environment(id_record_environment);
 ALTER TABLE facialrecognition.facial_event ADD CONSTRAINT fk_facial_event_device FOREIGN KEY (id_device) REFERENCES facialrecognition.device(id_device);

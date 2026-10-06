@@ -1,6 +1,7 @@
 ALTER TABLE facialrecognition.biometric_log DROP CONSTRAINT IF EXISTS fk_biometric_log_event;
 ALTER TABLE facialrecognition.face_reset_request DROP CONSTRAINT IF EXISTS fk_face_reset_request_resolver;
 ALTER TABLE facialrecognition.face_reset_request DROP CONSTRAINT IF EXISTS fk_face_reset_request_user;
+ALTER TABLE environment.record_environment DROP CONSTRAINT IF EXISTS fk_record_environment_device;
 ALTER TABLE facialrecognition.facial_event DROP CONSTRAINT IF EXISTS fk_facial_event_device;
 ALTER TABLE facialrecognition.facial_event DROP CONSTRAINT IF EXISTS fk_facial_event_record_environment;
 ALTER TABLE facialrecognition.facial_event DROP CONSTRAINT IF EXISTS fk_facial_event_user;
