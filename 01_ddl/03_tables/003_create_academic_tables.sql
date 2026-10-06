@@ -45,8 +45,25 @@ CREATE TABLE academic.chip (
     id_chip UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_program UUID NOT NULL,
     chip_code VARCHAR(20) NOT NULL UNIQUE,
+    start_date DATE,
+    end_date DATE,
     state VARCHAR(20) NOT NULL,
     deactivation_reason VARCHAR(200),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_at TIMESTAMPTZ,
+    updated_by VARCHAR(100),
+    deleted_by VARCHAR(100),
+    deleted_at TIMESTAMPTZ
+);
+
+CREATE TABLE academic.instructor_chip (
+    id_instructor_chip UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_instructor UUID NOT NULL,
+    id_chip UUID NOT NULL,
+    assignment_start DATE,
+    assignment_end DATE,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_by VARCHAR(100),
     updated_at TIMESTAMPTZ,
