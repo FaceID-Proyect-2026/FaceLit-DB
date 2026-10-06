@@ -26,6 +26,7 @@ CREATE TABLE environment.chip_environment (
 CREATE TABLE environment.record_environment (
     id_record_environment UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_environment UUID NOT NULL,
+    id_device UUID NOT NULL,
     id_chip UUID NOT NULL,
     id_instructor_scheduled UUID NOT NULL,
     id_instructor_in_charge UUID NULL,

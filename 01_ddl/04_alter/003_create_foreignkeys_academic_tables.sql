@@ -3,4 +3,3 @@ ALTER TABLE academic.instructor_program ADD CONSTRAINT fk_instructor_program_ins
 ALTER TABLE academic.instructor_program ADD CONSTRAINT fk_instructor_program_program FOREIGN KEY (id_program) REFERENCES academic.program(id_program);
 ALTER TABLE academic.chip ADD CONSTRAINT fk_chip_program FOREIGN KEY (id_program) REFERENCES academic.program(id_program);
 ALTER TABLE academic.apprentice ADD CONSTRAINT fk_apprentice_user FOREIGN KEY (id_user_app) REFERENCES security.user_app(id_user_app);
-ALTER TABLE academic.apprentice ADD CONSTRAINT fk_apprentice_chip FOREIGN KEY (id_chip) REFERENCES academic.chip(id_chip);

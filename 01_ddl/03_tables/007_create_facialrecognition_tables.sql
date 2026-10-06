@@ -15,7 +15,7 @@ CREATE TABLE facialrecognition.device (
 
 CREATE TABLE facialrecognition.user_face (
     id_user_face UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    id_apprentice UUID NOT NULL,
+    id_apprentice UUID NOT NULL UNIQUE,
     embedding FLOAT8[] NOT NULL,
     embedding_dimension INT4,
     model_name VARCHAR(100),
@@ -31,13 +31,14 @@ CREATE TABLE facialrecognition.user_face (
 
 CREATE TABLE facialrecognition.facial_event (
     id_facial_event UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    id_user_app UUID NULL,
-    id_record_environment UUID NOT NULL,
+    id_record_environment UUID NOT NULL, 
     id_device UUID NOT NULL,
+    id_apprentice UUID NOT NULL,
     event_datetime TIMESTAMPTZ NOT NULL,
     event_type VARCHAR(20) NOT NULL CHECK (event_type IN ('ENTRY', 'EXIT')),
     recognition_result VARCHAR(20) NOT NULL,
-    send_status VARCHAR(20) NOT NULL,
+    attendance_status VARCHAR(20) NOT NULL CHECK (attendance_status IN ('PUNCTUAL', 'LATE', 'ABSENT', 'REJECTED')),
+    match_score NUMERIC(5,4) CHECK (match_score >= 0 AND match_score <= 1),
     origin VARCHAR(10) NOT NULL CHECK (origin IN ('PC', 'MOBILE')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_by VARCHAR(100),
