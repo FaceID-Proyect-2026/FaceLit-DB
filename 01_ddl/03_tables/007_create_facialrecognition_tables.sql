@@ -1,6 +1,7 @@
 CREATE TABLE facialrecognition.device (
     id_device UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    device_code VARCHAR(50) NOT NULL,
+    id_environment UUID NOT NULL,
+    device_code VARCHAR(50) NOT NULL UNIQUE,
     location VARCHAR(100),
     status VARCHAR(20) NOT NULL CHECK (status IN ('ACTIVE', 'PENDING', 'INACTIVE')),
     origin_ip VARCHAR(50),
@@ -14,7 +15,7 @@ CREATE TABLE facialrecognition.device (
 
 CREATE TABLE facialrecognition.user_face (
     id_user_face UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    id_user_app UUID NOT NULL,
+    id_apprentice UUID NOT NULL,
     embedding FLOAT8[] NOT NULL,
     embedding_dimension INT4,
     model_name VARCHAR(100),

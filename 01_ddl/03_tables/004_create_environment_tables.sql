@@ -29,7 +29,6 @@ CREATE TABLE environment.record_environment (
     id_chip UUID NOT NULL,
     id_instructor_scheduled UUID NOT NULL,
     id_instructor_in_charge UUID NULL,
-    session_start TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     registration_minutes INTEGER NOT NULL,
     exit_time TIME,
     shutdown_time TIME,
