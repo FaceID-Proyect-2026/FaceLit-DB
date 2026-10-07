@@ -103,3 +103,11 @@ databaseChangeLog:
         - sqlFile: {path: 013_user_face_embedding_array.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/013_user_face_embedding_array.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-record-environment-business-times
+      author: facelit
+      labels: ddl,alter,environment
+      changes:
+        - sqlFile: {path: 014_record_environment_business_times.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/014_record_environment_business_times.rollback.sql, relativeToChangelogFile: true, stripComments: false}

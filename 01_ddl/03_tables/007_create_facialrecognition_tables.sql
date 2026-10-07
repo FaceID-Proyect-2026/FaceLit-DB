@@ -37,7 +37,7 @@ CREATE TABLE facialrecognition.facial_event (
     event_datetime TIMESTAMPTZ NOT NULL,
     event_type VARCHAR(20) NOT NULL CHECK (event_type IN ('ENTRY', 'EXIT')),
     recognition_result VARCHAR(20) NOT NULL,
-    attendance_status VARCHAR(20) NOT NULL CHECK (attendance_status IN ('PUNCTUAL', 'LATE', 'ABSENT', 'REJECTED')),
+    attendance_status VARCHAR(20) NOT NULL CHECK (attendance_status IN ('PUNCTUAL', 'LATE', 'ABSENT')),
     match_score NUMERIC(5,4) CHECK (match_score >= 0 AND match_score <= 1),
     origin VARCHAR(10) NOT NULL CHECK (origin IN ('PC', 'MOBILE')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
