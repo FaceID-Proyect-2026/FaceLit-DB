@@ -47,3 +47,11 @@ databaseChangeLog:
         - sqlFile: {path: 007_create_facialrecognition_indexes.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/007_create_facialrecognition_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-unique-facial-event-attendance
+      author: facelit
+      labels: "ddl,indexes,facialrecognition"
+      changes:
+        - sqlFile: {path: 008_unique_facial_event_attendance.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/008_unique_facial_event_attendance.rollback.sql, relativeToChangelogFile: true, stripComments: false}

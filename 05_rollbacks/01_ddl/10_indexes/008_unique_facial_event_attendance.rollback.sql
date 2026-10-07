@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS facialrecognition.uq_facial_event_attendance_once;
