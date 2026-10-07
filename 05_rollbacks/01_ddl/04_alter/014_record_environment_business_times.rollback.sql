@@ -5,6 +5,12 @@ ALTER TABLE environment.record_environment
 DROP CONSTRAINT IF EXISTS chk_record_environment_registration_minutes;
 
 ALTER TABLE environment.record_environment
+ALTER COLUMN exit_time DROP NOT NULL;
+
+ALTER TABLE environment.record_environment
+ALTER COLUMN shutdown_time DROP NOT NULL;
+
+ALTER TABLE environment.record_environment
 ALTER COLUMN exit_time TYPE TIME
 USING exit_time::time;
 

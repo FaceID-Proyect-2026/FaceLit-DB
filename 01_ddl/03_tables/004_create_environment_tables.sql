@@ -32,8 +32,8 @@ CREATE TABLE environment.record_environment (
     id_instructor_in_charge UUID NULL,
     entry_time TIMESTAMPTZ NOT NULL,
     registration_minutes INTEGER NOT NULL CHECK (registration_minutes > 0),
-    exit_time TIMESTAMPTZ,
-    shutdown_time TIMESTAMPTZ,
+    exit_time TIMESTAMPTZ NOT NULL,
+    shutdown_time TIMESTAMPTZ NOT NULL,
     exit_reminder_sent BOOLEAN NOT NULL DEFAULT FALSE,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -43,12 +43,7 @@ CREATE TABLE environment.record_environment (
     deleted_by VARCHAR(100),
     deleted_at TIMESTAMPTZ,
     CONSTRAINT chk_record_environment_times CHECK (
-        (exit_time IS NULL AND shutdown_time IS NULL)
-        OR (
-            exit_time IS NOT NULL
-            AND shutdown_time IS NOT NULL
-            AND exit_time > entry_time
-            AND shutdown_time > exit_time
-        )
+        exit_time > entry_time
+        AND shutdown_time > exit_time
     )
 );

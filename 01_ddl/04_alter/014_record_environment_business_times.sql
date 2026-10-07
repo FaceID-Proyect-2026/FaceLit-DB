@@ -60,14 +60,15 @@ BEGIN
 END $$;
 
 ALTER TABLE environment.record_environment
+ALTER COLUMN exit_time SET NOT NULL;
+
+ALTER TABLE environment.record_environment
+ALTER COLUMN shutdown_time SET NOT NULL;
+
+ALTER TABLE environment.record_environment
 ADD CONSTRAINT chk_record_environment_times CHECK (
-    (exit_time IS NULL AND shutdown_time IS NULL)
-    OR (
-        exit_time IS NOT NULL
-        AND shutdown_time IS NOT NULL
-        AND exit_time > entry_time
-        AND shutdown_time > exit_time
-    )
+    exit_time > entry_time
+    AND shutdown_time > exit_time
 );
 
 DROP INDEX IF EXISTS environment.idx_record_environment_session;
