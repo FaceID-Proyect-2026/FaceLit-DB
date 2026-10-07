@@ -16,7 +16,7 @@ CREATE TABLE facialrecognition.device (
 CREATE TABLE facialrecognition.user_face (
     id_user_face UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_apprentice UUID NOT NULL UNIQUE,
-    embedding FLOAT8[] NOT NULL,
+    embedding vector NOT NULL,
     embedding_dimension INT4,
     model_name VARCHAR(100),
     photo_reference VARCHAR(500),

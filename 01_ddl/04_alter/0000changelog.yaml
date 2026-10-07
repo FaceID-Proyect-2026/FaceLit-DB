@@ -108,6 +108,6 @@ databaseChangeLog:
       author: facelit
       labels: ddl,alter,environment
       changes:
-        - sqlFile: {path: 014_record_environment_business_times.sql, relativeToChangelogFile: true, stripComments: false}
+        - sqlFile: {path: 014_record_environment_business_times.sql, relativeToChangelogFile: true, stripComments: false, splitStatements: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/014_record_environment_business_times.rollback.sql, relativeToChangelogFile: true, stripComments: false}
