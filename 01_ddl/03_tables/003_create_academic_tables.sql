@@ -83,6 +83,19 @@ CREATE TABLE academic.apprentice (
     deleted_at TIMESTAMPTZ
 );
 
+CREATE TABLE academic.apprentice_chip (
+    id_apprentice_chip UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_apprentice UUID NOT NULL,
+    id_chip UUID NOT NULL,
+    state VARCHAR(20) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_at TIMESTAMPTZ,
+    updated_by VARCHAR(100),
+    deleted_by VARCHAR(100),
+    deleted_at TIMESTAMPTZ
+);
+
 CREATE TABLE academic.csv_pending_transfer (
     id_pending_transfer UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     id_user_app UUID NOT NULL REFERENCES security.user_app(id_user_app),

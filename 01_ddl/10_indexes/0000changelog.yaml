@@ -1,13 +1,5 @@
 databaseChangeLog:
   - changeSet:
-      id: facelit-indexes-security
-      author: facelit
-      labels: "ddl,indexes,security"
-      changes:
-        - sqlFile: {path: 001_create_security_indexes.sql, relativeToChangelogFile: true, stripComments: false}
-      rollback:
-        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/001_create_security_indexes.rollback.sql, relativeToChangelogFile: true, stripComments: false}
-  - changeSet:
       id: facelit-indexes-roleandpermission
       author: facelit
       labels: "ddl,indexes,roleandpermission"
