@@ -111,3 +111,11 @@ databaseChangeLog:
         - sqlFile: {path: 014_record_environment_business_times.sql, relativeToChangelogFile: true, stripComments: false, splitStatements: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/014_record_environment_business_times.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-facial-event-excuse
+      author: facelit
+      labels: ddl,alter,facialrecognition
+      changes:
+        - sqlFile: {path: 015_facial_event_excuse.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/015_facial_event_excuse.rollback.sql, relativeToChangelogFile: true, stripComments: false}
