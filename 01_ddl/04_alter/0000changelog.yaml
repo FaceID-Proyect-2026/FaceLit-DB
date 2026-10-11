@@ -119,3 +119,11 @@ databaseChangeLog:
         - sqlFile: {path: 015_facial_event_excuse.sql, relativeToChangelogFile: true, stripComments: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/015_facial_event_excuse.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-initial-password-prompt-seen
+      author: facelit
+      labels: ddl,alter,security
+      changes:
+        - sqlFile: {path: 016_initial_password_prompt_seen.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/016_initial_password_prompt_seen.rollback.sql, relativeToChangelogFile: true, stripComments: false}
