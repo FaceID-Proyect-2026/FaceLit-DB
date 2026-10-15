@@ -1,4 +1,10 @@
 databaseChangeLog:
+  - include:
+      file: 018_email_only_exit_reminders.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 017_face_reset_authorization.changelog.yaml
+      relativeToChangelogFile: true
   - changeSet:
       id: facelit-foreignkeys-security
       author: facelit

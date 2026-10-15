@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-email-only-exit-reminders
+      author: facelit
+      labels: ddl,alter,notification
+      changes:
+        - sqlFile: {path: 018_email_only_exit_reminders.sql, relativeToChangelogFile: true, splitStatements: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/018_email_only_exit_reminders.rollback.sql, relativeToChangelogFile: true}

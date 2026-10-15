@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-face-reset-authorization
+      author: facelit
+      labels: ddl,alter,facialrecognition
+      changes:
+        - sqlFile: {path: 017_face_reset_authorization.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/017_face_reset_authorization.rollback.sql, relativeToChangelogFile: true, stripComments: false}
