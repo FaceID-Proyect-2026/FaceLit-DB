@@ -30,12 +30,12 @@ CREATE TABLE environment.record_environment (
     id_chip UUID NOT NULL,
     id_instructor_scheduled UUID NOT NULL,
     id_instructor_in_charge UUID NULL,
-    entry_time TIMESTAMPTZ NOT NULL,
-    registration_minutes INTEGER NOT NULL CHECK (registration_minutes > 0),
-    exit_time TIMESTAMPTZ NOT NULL,
-    shutdown_time TIMESTAMPTZ NOT NULL,
-    exit_reminder_sent BOOLEAN NOT NULL DEFAULT FALSE,
-    active BOOLEAN NOT NULL DEFAULT TRUE,
+    entry_time TIMESTAMPTZ NOT NULL, -- Fecha y hora de entrada al ambiente.
+    registration_minutes INTEGER NOT NULL CHECK (registration_minutes > 0), -- Duracion del registro en minutos; debe ser mayor que cero.
+    exit_time TIMESTAMPTZ NOT NULL, -- Fecha y hora de salida del ambiente.
+    shutdown_time TIMESTAMPTZ NOT NULL, -- Fecha y hora de apagado; debe ser posterior a la salida.
+    exit_reminder_sent BOOLEAN NOT NULL DEFAULT FALSE, -- Indica si ya se envio el recordatorio de salida.
+    active BOOLEAN NOT NULL DEFAULT TRUE, -- Indica si el registro de uso del ambiente sigue activo.
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_by VARCHAR(100),
     updated_at TIMESTAMPTZ,
