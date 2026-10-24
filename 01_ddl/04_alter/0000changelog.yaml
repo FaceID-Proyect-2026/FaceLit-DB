@@ -145,3 +145,11 @@ databaseChangeLog:
       labels: ddl,alter,security
       changes:
         - sqlFile: {path: 020_email_change_recovery_code.sql, relativeToChangelogFile: true, stripComments: false}
+  - changeSet:
+      id: facelit-repair-duplicate-faces
+      author: facelit
+      labels: ddl,alter,facialrecognition,data-repair
+      changes:
+        - sqlFile: {path: 021_repair_duplicate_faces.sql, relativeToChangelogFile: true, stripComments: false, splitStatements: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/021_repair_duplicate_faces.rollback.sql, relativeToChangelogFile: true, stripComments: false}
