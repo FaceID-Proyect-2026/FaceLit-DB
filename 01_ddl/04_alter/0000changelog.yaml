@@ -153,3 +153,6 @@ databaseChangeLog:
         - sqlFile: {path: 021_repair_duplicate_faces.sql, relativeToChangelogFile: true, stripComments: false, splitStatements: false}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/021_repair_duplicate_faces.rollback.sql, relativeToChangelogFile: true, stripComments: false}
+  - include:
+      file: 022_facial_event_excuse_default.changelog.yaml
+      relativeToChangelogFile: true
