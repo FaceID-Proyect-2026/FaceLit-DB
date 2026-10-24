@@ -1,3 +1,5 @@
+-- Additive repair for databases created from the current changelog.
+-- Historical changesets remain untouched so Liquibase checksums stay valid.
 ALTER TABLE facialrecognition.facial_event
     ALTER COLUMN excuse SET DEFAULT FALSE;
 

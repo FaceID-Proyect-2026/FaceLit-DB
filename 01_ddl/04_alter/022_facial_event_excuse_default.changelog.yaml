@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-facial-event-excuse-default
+      author: facelit
+      labels: ddl,alter,facialrecognition
+      changes:
+        - sqlFile:
+            path: 022_facial_event_excuse_default.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/022_facial_event_excuse_default.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
