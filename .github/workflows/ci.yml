@@ -1,0 +1,66 @@
+name: FaceLit Database CI
+
+on:
+  pull_request:
+  push:
+    branches: [develop, dev, qa, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  liquibase:
+    name: PostgreSQL and Liquibase integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    env:
+      POSTGRES_DB: facelit-db
+      POSTGRES_USER: facelit_ci
+      POSTGRES_PASSWORD: facelit_ci_only_not_for_production
+      POSTGRES_PORT: '5439'
+    steps:
+      - name: Checkout DB migrations
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare migration logs
+        run: mkdir -p ci-logs
+
+      - name: Start PostgreSQL
+        run: docker compose up -d --wait postgres
+
+      - name: Validate Liquibase changelog
+        run: docker compose run --rm liquibase validate 2>&1 | tee ci-logs/validate.log
+
+      - name: Apply migrations on clean database
+        run: docker compose run --rm liquibase update 2>&1 | tee ci-logs/update.log
+
+      - name: Check pending changesets
+        run: docker compose run --rm liquibase status --verbose 2>&1 | tee ci-logs/status.log
+
+      - name: Verify HU002 migration rollback and reapplication
+        shell: pwsh
+        run: ./scripts/test-hu002-migration.ps1 -EvidenceDirectory "$PWD/ci-logs/hu002" -PostgresPort 55440
+
+      - name: Capture Docker logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Upload migration logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-migration-logs
+          path: |
+            ci-logs/*.log
+            ci-logs/hu002/migration-rollback.log
+          if-no-files-found: warn
+
+      - name: Shut down ephemeral database
+        if: always()
+        run: docker compose down --volumes --remove-orphans
