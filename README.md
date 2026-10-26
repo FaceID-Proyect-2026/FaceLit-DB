@@ -100,6 +100,14 @@ The [rollback helper](scripts/rollback-by-id.ps1) and [reapply helper](scripts/r
 
 When introducing new database changes, create a new changeset and preserve applied ones. Validate the entire include chain and test forward/reverse behavior in an isolated database. Do not renumber files, clear checksums or mark changes as applied merely to hide a mismatch.
 
+## Continuous integration
+
+The [CI workflow](.github/workflows/ci.yml) runs on pull requests and pushes to develop, dev, qa and main, with optional manual dispatch. Its `PostgreSQL and Liquibase integration` job starts a disposable PostgreSQL instance with dummy CI credentials, runs Liquibase `validate`, `update` and `status --verbose`, and removes only the runner's temporary environment at completion. It does not connect to the installed development or production database.
+
+The `database-migration-logs` artifact preserves command output. Bash pipefail prevents log capture from hiding a Liquibase failure. This checks the active migration chain on a fresh database; it does not certify every rollback, an upgrade of existing production data or application login. It produces migration evidence rather than a source-code coverage percentage.
+
+For HU-MEJ-006 acceptance, record the exact head SHA and green Actions run, inspect its artifact, verify the required check and independent approval, and retain failed-check blocking evidence. Earlier runs and reports remain historical evidence only; new migrations must be assessed on the branch that actually contains them.
+
 ## Integration, verification and documentation policy
 
 The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
