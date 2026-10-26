@@ -3,11 +3,11 @@ param(
 
     [string]$Author,
 
-    [string]$ProjectName = "shopping-cart-db",
+    [string]$ProjectName = "facelit-docker-compose",
 
-    [string]$DbUser = "shopping_cart_user",
+    [string]$DbUser = "facelit_user",
 
-    [string]$DbName = "shopping_cart",
+    [string]$DbName = "facelit-db",
 
     [switch]$Execute,
 
@@ -200,7 +200,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $repoRoot
 try {
     if ([string]::IsNullOrWhiteSpace($ChangesetId)) {
-        $ChangesetId = Read-Host "Enter changeset id (example: 005-create-billing-tables)"
+        $ChangesetId = Read-Host "Enter changeset id (example: facelit-model-security)"
     }
 
     if ([string]::IsNullOrWhiteSpace($ChangesetId)) {

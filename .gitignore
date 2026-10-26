@@ -1,2 +1,5 @@
 .env
 liquibase.properties
+
+# Generated SQL previews and temporary files
+.tmp/
