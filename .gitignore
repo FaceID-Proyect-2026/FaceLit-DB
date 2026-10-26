@@ -1,3 +1,6 @@
 .env
 liquibase.properties
 .qa-evidence/
+
+# Generated SQL previews and temporary files
+.tmp/

@@ -1,5 +1,5 @@
 param(
-    [string]$ProjectName = "shopping-cart-db",
+    [string]$ProjectName = "facelit-docker-compose",
     [switch]$OnlyNext,
     [switch]$AllPending,
     [switch]$AutoConfirm

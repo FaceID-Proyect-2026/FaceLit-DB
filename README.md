@@ -1,484 +1,119 @@
-# Facelit DB
+# FaceLit database
 
-Repositorio minimo para versionar la base de datos base de Facelit con Liquibase y PostgreSQL.
+PostgreSQL 16 and Liquibase migrations for FaceLit academic attendance. This repository owns the versioned schema, indexes, seed changes and rollback definitions used by the backend and facial service. [changelog-master.yaml](changelog-master.yaml) is the active deployment entry point.
 
-## Alcance Actual
+## Architecture and active schema
 
-Este repositorio solo administra lo que ya existe hoy en la rama:
+| Schema | Responsibility |
+| --- | --- |
+| `security` | Application users, credentials, recovery/session/configuration and account-access changes |
+| `roleandpermission` | Roles, permissions and their assignments |
+| `academic` | Programs, instructors, apprentices, training groups, membership and transfers |
+| `environment` | Environments and attendance sessions |
+| `notification` | Notifications and email delivery records |
+| `legal` | Terms acceptance |
+| `facialrecognition` | Devices, facial templates, attendance events, biometric logs and reset requests |
 
-- extension `uuid-ossp`
-- schemas `security`
-- tablas base de seguridad.
-
-No incluye vistas, funciones, procedimientos, triggers, indices ni datos semilla.
-
-## Estructura
+The [schema creation script](01_ddl/01_schemas/001_create_schemas.sql) declares all seven schemas. The [extension script](01_ddl/00_extensions/001_enable_uuid_extension.sql) enables `uuid-ossp` and `vector`; use PostgreSQL with pgvector installed, as provided by the current Compose image.
 
 ```text
-shopping-cart-db/
-|-- changelog-master.yaml
-|-- 01_ddl/
-|   |-- 0000changelog.yaml
-|   |-- 00_extensions/
-|   |   `-- 0000changelog.yaml
-|   |-- 01_schemas/
-|   |   `-- 0000changelog.yaml
-|   |-- 02_types/
-|   |   `-- 0000changelog.yaml
-|   |-- 03_tables/
-|   |   `-- 0000changelog.yaml
-|   |-- 04_views/
-|   |   `-- 0000changelog.yaml
-|   |-- 05_materialized_views/
-|   |   `-- 0000changelog.yaml
-|   |-- 06_functions/
-|   |   `-- 0000changelog.yaml
-|   |-- 07_procedures/
-|   |   `-- 0000changelog.yaml
-|   |-- 08_triggers/
-|   |   `-- 0000changelog.yaml
-|   `-- 09_indexes/
-|       `-- 0000changelog.yaml
-|-- 02_dml/
-|   |-- 0000changelog.yaml
-|   |-- 00_inserts/
-|   |   `-- 0000changelog.yaml
-|   |-- 01_updates/
-|   |   `-- 0000changelog.yaml
-|   |-- 02_deletes/
-|   |   `-- 0000changelog.yaml
-|   |-- 03_upserts/
-|   |   `-- 0000changelog.yaml
-|   `-- 04_patches/
-|       `-- 0000changelog.yaml
-|-- 03_dcl/
-|   |-- 0000changelog.yaml
-|   |-- 00_roles/
-|   |   `-- 0000changelog.yaml
-|   |-- 01_grants/
-|   |   `-- 0000changelog.yaml
-|   `-- 02_policies/
-|       `-- 0000changelog.yaml
-|-- 04_tcl/
-|   |-- 0000changelog.yaml
-|   |-- 00_transaction_blocks/
-|   |   `-- 0000changelog.yaml
-|   `-- 01_manual_recoveries/
-|       `-- 0000changelog.yaml
-|-- 05_rollbacks/
-|   |-- 01_ddl/
-|   |   |-- 00_extensions/
-|   |   |-- 01_schemas/
-|   |   |-- 02_types/
-|   |   |-- 03_tables/
-|   |   |-- 04_views/
-|   |   |-- 05_materialized_views/
-|   |   |-- 06_functions/
-|   |   |-- 07_procedures/
-|   |   |-- 08_triggers/
-|   |   `-- 09_indexes/
-|   |-- 02_dml/
-|   |   |-- 00_inserts/
-|   |   |-- 01_updates/
-|   |   |-- 02_deletes/
-|   |   |-- 03_upserts/
-|   |   `-- 04_patches/
-|   |-- 03_dcl/
-|   |   |-- 00_roles/
-|   |   |-- 01_grants/
-|   |   `-- 02_policies/
-|   `-- 04_tcl/
-|       |-- 00_transaction_blocks/
-|       `-- 01_manual_recoveries/
-|-- docker-compose.yml
-|-- .env.example
-|-- liquibase.properties.example
-|-- README.md
-|-- docs/
-`-- docker/
+FaceLit-DB/
+  changelog-master.yaml
+  01_ddl/        Extensions, schemas, tables, alterations and indexes
+  02_dml/        Seed/data changes, selected through their changelogs
+  03_dcl/        Role, grant and policy changelog slots
+  04_tcl/        Transaction/recovery changelog slots
+  05_rollbacks/  Referenced reversal scripts
+  docker/        Liquibase image with the PostgreSQL JDBC driver
+  scripts/       Existing rollback/reapply utilities
+  docker-compose.yml
+  .env.example
+  liquibase.properties.example
+  README.md      Single maintained documentation entry
 ```
 
-## Arquitectura De Capas
+An existing directory or SQL file is not automatically deployed. Only entries reachable through the master changelog participate. Preserve their existing relative paths, IDs, authors, order and checksums.
 
-La arquitectura queda organizada por responsabilidad SQL:
+## Changelog order and actual contents
 
-- `01_ddl`: cambios estructurales
-- `02_dml`: cambios de datos por verbo operativo
-- `03_dcl`: seguridad, permisos y control de acceso
-- `04_tcl`: operaciones transaccionales o de recuperacion excepcionales
+The master includes these layers in order:
 
-Dentro de cada capa, los directorios se dividen por familia tecnica para que el crecimiento siga siendo ordenado.
+1. [DDL](01_ddl/changelog.yaml): extensions, schemas and dedicated type slots, tables, alterations, remaining object-family slots, then indexes.
+2. [DML](02_dml/changelog.yaml): the configured insert/update/delete/upsert/patch changelogs.
+3. [DCL](03_dcl/changelog.yaml): the configured role/grant/policy slots.
+4. [TCL](04_tcl/changelog.yaml): the configured transaction/recovery slots.
 
-## Por Que `db/` Ya No Existe
+The table changelog defines the seven component groups. Alterations include account-access fields, notification catalog changes, facial reset authorization, session times, email-only reminders and subsequent corrections. Follow include order; numerical filenames alone do not determine execution order.
 
-En un repositorio que ya es exclusivamente de base de datos, `db/` no agrega semantica; solo agrega profundidad innecesaria.
+[Index changes](01_ddl/10_indexes/0000changelog.yaml) are active. They cover role assignments, academic relationships, environment sessions, unread notifications, legal acceptance and facial attendance/template constraints. Additional constraints/indexes may also be defined inside table or alteration SQL.
 
-Por eso el contrato de despliegue ahora vive directo en [changelog-master.yaml](C:/www/code-corhuila/shopping-cart-db/changelog-master.yaml#L1).
+[Seed changes](02_dml/00_inserts/0000changelog.yaml) are active, including [seed.sql](02_dml/00_inserts/seed.sql) and the initial coordinator changeset. They are not an assertion that no initial data exists. Do not publish personal credentials or infer a seed account's plaintext password from a stored hash; obtain authorized access through the operator.
 
-## Orquestacion Por YAML
+Several dedicated object families and DCL/TCL slots currently contain empty `databaseChangeLog` lists. Their presence describes extension points, not implemented views, functions, policies or recovery operations. Conversely, populated indexes and seeds must not be described as unused placeholders.
 
-La orquestacion ahora esta distribuida por niveles:
+## Prerequisites and local configuration
 
-- `changelog-master.yaml`: coordina las capas principales
-- `01_ddl/0000changelog.yaml`, `02_dml/0000changelog.yaml`, `03_dcl/0000changelog.yaml`, `04_tcl/0000changelog.yaml`: coordinan cada paquete principal
-- cada subcarpeta tiene su propio `0000changelog.yaml` para declarar su responsabilidad concreta
+Use Docker with Compose, or a compatible local PostgreSQL/pgvector and Liquibase installation. The current [Liquibase Dockerfile](docker/liquibase/Dockerfile) uses Liquibase 5.0.2 with PostgreSQL JDBC 42.7.8.
 
-Eso deja el repositorio mas modular: cada paquete conoce solo sus hijos directos y cada subcarpeta controla su propio contenido activo.
+Copy [.env.example](.env.example) to `.env` only if a local file does not already exist. The Compose variables are:
 
-## Arbol De Rollbacks En Raiz
+| Variable | Purpose |
+| --- | --- |
+| `POSTGRES_DB` | Database name |
+| `POSTGRES_USER` | Database account |
+| `POSTGRES_PASSWORD` | Local connection password; configure privately for each environment |
+| `POSTGRES_PORT` | Host port, normally 5439 in this development topology |
 
-Los scripts de rollback quedan separados en `05_rollbacks/` en la raiz, con arbol espejo por capas.
+Example values are development configuration, not production credentials. From a host process, connect to the configured localhost port. Other containers on the same Compose network use `postgres:5432`, not the host-mapped port. Backend JDBC and micro-facial SQLAlchemy URLs must point to the same intended environment where that is the current integration contract.
 
-En cada `changeSet`, el `rollback.sqlFile` apunta a esa ruta centralizada. Esto facilita auditoria y seguimiento cuando el equipo quiere revisar reversas sin mezclar archivos de avance y reversa.
+## Start and migrate with Docker
 
-La numeracion deja `01` a `04` para capas funcionales y usa `05` como bloque de reversa.
-
-## Regla De Activacion
-
-Una carpeta o script solo se vuelve activo cuando entra en la cadena de includes desde [changelog-master.yaml](C:/www/code-corhuila/shopping-cart-db/changelog-master.yaml#L1).
-
-Mientras eso no ocurra:
-
-- la carpeta puede existir
-- su proposito puede estar definido
-- pero no participa en el despliegue
-
-En la practica, eso significa que cada nivel gobierna solo su alcance inmediato:
-
-- el `master` activa capas
-- cada capa activa subcarpetas
-- cada subcarpeta activa sus scripts SQL
-
-## Capa Activa Hoy
-
-Hoy el despliegue funcional usa:
-
-- `01_ddl/00_extensions`
-- `01_ddl/01_schemas`
-- `01_ddl/03_tables`
-
-## Capas Reservadas
-
-Hoy quedan listas y gobernadas, pero sin uso activo:
-
-- `01_ddl/02_types`
-- `01_ddl/04_views`
-- `01_ddl/05_materialized_views`
-- `01_ddl/06_functions`
-- `01_ddl/07_procedures`
-- `01_ddl/08_triggers`
-- `01_ddl/09_indexes`
-- `02_dml`
-- `03_dcl`
-- `04_tcl/00_transaction_blocks`
-- `04_tcl/01_manual_recoveries`
-
-## Criterio Mas Experto
-
-Si pensamos como ingenieria de datos o de plataforma:
-
-- `DDL` debe concentrar la evolucion del modelo fisico
-- `DML` debe separar los cambios de datos de la estructura y, si el equipo necesita trazabilidad fina, conviene hacerlo visible por verbo principal
-- `DCL` debe aislar seguridad y permisos
-- `TCL` normalmente debe mantenerse pequeno, porque Liquibase ya controla buena parte del orden y la transaccionalidad
-
-Eso suele ser mas limpio que mezclar todo por objeto tecnico o esconder el flujo activo dentro de una carpeta generica.
-
-## Estructuras Complementarias Posibles
-
-Si el repositorio crece, estas extensiones siguen siendo validas dentro de la taxonomia actual:
-
-- `13_sequences`: secuencias explicitas
-- `14_constraints`: constraints complejas separadas de tablas
-- `15_permissions`: grants, roles y permisos
-- `16_partitions`: particiones
-- `17_jobs`: jobs o scheduler SQL si aplica
-- `18_hotfixes`: cambios urgentes y acotados
-- `19_reference_data`: maestros estables
-- `20_patches`: scripts excepcionales de correccion
-
-La explicacion completa de esta arquitectura esta en [sql-layer-architecture.md](C:/www/code-corhuila/shopping-cart-db/docs/sql-layer-architecture.md).
-
-## Seguimiento De Datos
-
-La capa `02_dml` queda intencionalmente explicita:
-
-- `02_dml/00_inserts`: altas o cargas nuevas
-- `02_dml/01_updates`: correcciones o modificaciones
-- `02_dml/02_deletes`: bajas controladas
-- `02_dml/03_upserts`: insercion o actualizacion en una sola operacion
-- `02_dml/04_patches`: scripts mixtos o parches excepcionales
-
-Esto facilita mucho mas el seguimiento operativo: que se inserto, que se corrigio, que se elimino y que fue un parche compuesto.
-
-## Requisitos
-
-- Docker Desktop
-- Docker Compose
-- Liquibase local solo si quieres ejecutarlo fuera de Docker
-
-## Reset Limpio Del Proyecto (Solo Este Repo)
-
-Ejecuta este flujo desde la raiz del repositorio cuando necesites limpiar el estado y volver a aplicar todo desde cero:
-
-```bash
-docker compose -p facelit-docker-compose down --volumes --remove-orphans
-docker compose -p facelit-docker-compose up -d postgres
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase validate
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase update
-```
-
-Nota: en DBeaver puede aparecer `SQL Error [08003]: This connection has been closed` despues del reset. Solo debes reconectar el datasource y refrescar `Schemas`.
-
-## Uso Rapido Con Docker
-
-1. Si quieres personalizar credenciales o puerto, crea `.env` a partir de `.env.example`.
-2. Levanta PostgreSQL:
+From this repository root:
 
 ```bash
 docker compose -p facelit-docker-compose up -d postgres
-```
-
-3. Construye la imagen de tooling de Liquibase solo la primera vez:
-
-```bash
 docker compose -p facelit-docker-compose --profile tooling build liquibase
-```
-
-4. Valida el changelog:
-
-```bash
 docker compose -p facelit-docker-compose --profile tooling run --rm liquibase validate
-```
-
-5. Revisa el estado:
-
-```bash
 docker compose -p facelit-docker-compose --profile tooling run --rm liquibase status
-```
-
-6. Aplica la estructura base:
-
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase update
-```
-
-7. Prueba el rollback del ultimo changeset:
-
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-count --count=1
-```
-
-8. Si quieres marcar un punto claro antes de un cambio, crea un tag operativo:
-
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase tag --tag=pre_cambio_x
-```
-
-9. Genera el SQL sin ejecutar cambios:
-
-```bash
 docker compose -p facelit-docker-compose --profile tooling run --rm liquibase update-sql
+docker compose -p facelit-docker-compose --profile tooling run --rm liquibase update
+docker compose -p facelit-docker-compose --profile tooling run --rm liquibase history
 ```
 
-## Uso Con Liquibase Local
+These commands use the actual `postgres` and `liquibase` services and `tooling` profile in [docker-compose.yml](docker-compose.yml). `update-sql` generates a preview; `update` changes the selected database. Inspect the target and pending changes first. A successful `validate` alone does not prove application compatibility or a successful migration on a new database.
 
-Usa esta opcion solo si tu instalacion local de Liquibase ya tiene disponible el driver JDBC de PostgreSQL.
+For local Liquibase, copy [liquibase.properties.example](liquibase.properties.example) to ignored `liquibase.properties`, set the intended private connection values and ensure the JDBC driver is installed. From the repository root, the corresponding commands are `liquibase validate`, `status`, `update-sql`, `update` and `history`.
 
-1. Copia `liquibase.properties.example` como `liquibase.properties`.
-2. Ajusta host, usuario, password y base de datos si cambiaste los valores por defecto.
-3. Ejecuta los mismos comandos de Liquibase desde la raiz del repo:
+## Rollback and operational constraints
 
-```bash
-liquibase validate
-liquibase status
-liquibase update
-liquibase rollback-count --count=1
-```
+Reversal scripts live under [05_rollbacks](05_rollbacks), referenced from individual changesets. Support is per changeset: do not assume every alteration has a complete or validated rollback. In particular, inspect the current declarations and reversals rather than promising that all data changes are reversible.
 
-## Orden De Ejecucion
-
-El `changelog-master.yaml` aplica los cambios en este orden:
-
-1. habilita la extension UUID
-2. crea los schemas
-3. crea tablas de `security`
-
-Ese orden evita errores por dependencias entre tablas y llaves foraneas.
-
-## Buenas Practicas Adoptadas
-
-- un solo `master changelog`
-- separacion por capa SQL y por responsabilidad de paquete
-- archivos pequenos y ordenados por responsabilidad
-- un `0000changelog.yaml` por paquete y subpaquete
-- changesets declarativos en YAML con `sqlFile` de avance y reversa
-- rollback separado en `sqlFile` dedicados bajo `05_rollbacks/`
-- configuracion local separada en archivos `.example`
-- runner Docker de Liquibase con driver PostgreSQL preinstalado
-- puerto por defecto `5439` para evitar choques con una instalacion local de PostgreSQL en `5432`
-- contrato de despliegue visible desde la raiz del repo
-
-## Reglas Para Cambios Nuevos
-
-- no modificar changesets ya aplicados
-- crear nuevos archivos para cada cambio posterior
-- mantener el orden de dependencias en el master changelog
-- no subir secretos reales al repositorio
-- validar con `validate` y `update-sql` antes de aplicar
-- antes de un `UPDATE` o `DELETE` sensible, definir por escrito la estrategia de reversa
-- antes de un parche delicado, crear un `tag`
-
-## Rollback Operativo
-
-En este repositorio, cada `changeSet` activo de DDL tiene su `rollback.sqlFile` en `05_rollbacks/`.
-
-Rollback del ultimo `changeSet` aplicado:
-
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-count --count=1
-```
-
-Rollback de los ultimos `N` changesets:
-
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-count --count=2
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-count --count=3
-```
-
-Vista previa del rollback sin ejecutar (recomendado antes de revertir):
+Preview a reversal before any authorized execution:
 
 ```bash
 docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-count-sql --count=1
 ```
 
-Flujo profesional con `tag` + `rollback --tag`:
+On a disposable verification database or an approved maintenance target, `rollback-count --count=1` reverses the last changeset if its rollback is supported. Tags/history can help identify a release boundary. Preserve backups and application compatibility; do not remove existing volumes as an upgrade or troubleshooting step.
 
-1. Marcar un punto estable antes del cambio:
+The [rollback helper](scripts/rollback-by-id.ps1) and [reapply helper](scripts/reapply-after-rollback.ps1) are executable tools. Their default project is `facelit-docker-compose`; the rollback helper defaults to user `facelit_user` and database `facelit-db`, matching the development Compose defaults. Override these parameters when your environment uses different values, and select preview mode before considering execution. Existing confirmation, dependency checks and rollback/reapply logic are preserved. Generated SQL previews belong in ignored `.tmp/`, not in Git.
 
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase tag --tag=bd01_stable
-```
+When introducing new database changes, create a new changeset and preserve applied ones. Validate the entire include chain and test forward/reverse behavior in an isolated database. Do not renumber files, clear checksums or mark changes as applied merely to hide a mismatch.
 
-2. Aplicar nuevos cambios (`update`).
-3. Si debes volver al punto estable:
+## Continuous integration
 
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback --tag=bd01_stable
-```
+The [CI workflow](.github/workflows/ci.yml) runs on pull requests and pushes to develop, dev, qa and main, with optional manual dispatch. Its `PostgreSQL and Liquibase integration` job starts a disposable PostgreSQL instance with dummy CI credentials, runs Liquibase `validate`, `update` and `status --verbose`, and removes only the runner's temporary environment at completion. It does not connect to the installed development or production database.
 
-Rollback por fecha/hora (cuando aplica):
+The `database-migration-logs` artifact preserves command output. Bash pipefail prevents log capture from hiding a Liquibase failure. This checks the active migration chain on a fresh database; it does not certify every rollback, an upgrade of existing production data or application login. It produces migration evidence rather than a source-code coverage percentage.
 
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase rollback-to-date "2026-03-26 13:21:00"
-```
+For HU-MEJ-006 acceptance, record the exact head SHA and green Actions run, inspect its artifact, verify the required check and independent approval, and retain failed-check blocking evidence. Earlier runs and reports remain historical evidence only; new migrations must be assessed on the branch that actually contains them.
 
-Auditoria despues de aplicar o revertir:
+## Integration, verification and documentation policy
 
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase history
-```
+The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
 
-Validar si un tag existe:
+For acceptance, record the database commit and changelog status, test a fresh disposable database, and verify the coordinated application's login and relevant academic/facial/attendance flows. Migration success alone is not an application login test.
 
-```bash
-docker compose -p facelit-docker-compose --profile tooling run --rm liquibase tag-exists --tag=bd01_stable
-```
+This README is the single maintained explanatory document. Active SQL, YAML changelogs, rollback scripts, configuration examples, Dockerfiles and executable utilities remain in place because they are functional inputs. Repository cleanup aligns tooling names with FaceLit and removes an unrelated generated SQL preview; it does not change schemas, migrations, roles, seed records or installed data.
 
-Verificacion directa en DB (util en Liquibase 5.0.2):
-
-```sql
-SELECT orderexecuted, id, author, filename, tag
-FROM public.databasechangelog
-ORDER BY orderexecuted;
-```
-
-## Rollback Por Changeset ID
-
-Liquibase Community no trae rollback directo por `changeset id`, pero este repo incluye helper para hacerlo de forma controlada:
-
-Atajos `ps1` (un archivo por accion):
-
-```powershell
-# Rollback por ID (seguro, interactivo)
-powershell -ExecutionPolicy Bypass -File .\scripts\01_rollback_by_id.ps1
-
-# Solo preview por ID
-powershell -ExecutionPolicy Bypass -File .\scripts\02_rollback_by_id_preview.ps1
-
-# Rollback en cascada por ID (peligroso, pide confirmacion extra)
-powershell -ExecutionPolicy Bypass -File .\scripts\03_rollback_by_id_cascade.ps1
-
-# Volver a aplicar solo el siguiente pendiente
-powershell -ExecutionPolicy Bypass -File .\scripts\04_reapply_next.ps1
-
-# Volver a aplicar todos los pendientes
-powershell -ExecutionPolicy Bypass -File .\scripts\05_reapply_all.ps1
-```
-
-Uso interactivo simple (recomendado):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\rollback-by-id.ps1
-```
-
-El script te pide el `changeset id`, muestra preview SQL y pregunta si quieres ejecutar el rollback.
-
-Politica de seguridad por defecto:
-
-- si es el ultimo changeset aplicado, usa rollback normal de Liquibase
-- si es un changeset intermedio, intenta rollback aislado de ese ID
-- antes del rollback aislado, ejecuta validacion de dependencias con `RESTRICT`
-- si detecta dependencia en cambios posteriores, rechaza el rollback aislado para proteger la integridad
-
-Si realmente necesitas rollback en cascada (desde ese ID hacia arriba), debes confirmarlo explicitamente:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\rollback-by-id.ps1 -ChangesetId "001-create-security-tables" -AllowCascade -Execute
-```
-
-Para ver primero el SQL de esa cascada sin ejecutar:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\rollback-by-id.ps1 -ChangesetId "001-create-security-tables" -AllowCascade -PreviewOnly
-```
-
-## Volver A Aplicar Despues De Rollback
-
-Uso interactivo simple:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\reapply-after-rollback.ps1
-```
-
-El script te pregunta si quieres:
-
-1. aplicar solo el siguiente changeset pendiente (por ejemplo volver a poner el `005`)
-2. aplicar todos los pendientes
-
-Ejecucion directa sin preguntas:
-
-```powershell
-# Solo el siguiente pendiente
-powershell -ExecutionPolicy Bypass -File .\scripts\reapply-after-rollback.ps1 -OnlyNext -AutoConfirm
-
-# Todos los pendientes
-powershell -ExecutionPolicy Bypass -File .\scripts\reapply-after-rollback.ps1 -AllPending -AutoConfirm
-```
-
-## Politica De IDs De Changeset
-
-El formato del `id` del changeset debe seguir el criterio operativo definido por el equipo.
-
-- En este repo no se usa `logicalFilePath` estatico para changesets.
-- El `id` puede mantenerse en formato UUID si ese es el criterio operativo del equipo.
-- IDs semanticos son mas auditables (HU, modulo, intencion del cambio).
-- Para control de rollback, el mecanismo recomendado es `tag` + `rollback --tag` o rollback por ID usando el helper del repo.
-
-## Estado Esperado
-
-Cuando el flujo funciona correctamente, la base queda con:
-
-- extension `uuid-ossp`
-- schemas `security`
-- tablas `user`, credential.
+Related repositories: [backend](https://github.com/FaceID-Proyect-2026/FaceLit-Backend), [frontend](https://github.com/FaceID-Proyect-2026/FaceLit), [facial service](https://github.com/FaceID-Proyect-2026/micro-facial).
