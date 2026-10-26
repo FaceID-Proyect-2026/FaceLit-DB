@@ -139,12 +139,16 @@ databaseChangeLog:
       labels: ddl,alter,security
       changes:
         - sqlFile: {path: 019_account_access_requests.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/019_account_access_requests.rollback.sql, relativeToChangelogFile: true}
   - changeSet:
       id: facelit-email-change-recovery-code
       author: facelit
       labels: ddl,alter,security
       changes:
         - sqlFile: {path: 020_email_change_recovery_code.sql, relativeToChangelogFile: true, stripComments: false}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/020_email_change_recovery_code.rollback.sql, relativeToChangelogFile: true}
   - changeSet:
       id: facelit-repair-duplicate-faces
       author: facelit
@@ -165,3 +169,6 @@ databaseChangeLog:
         - sqlFile: {path: 023_recovery_session_security.sql, relativeToChangelogFile: true}
       rollback:
         - sqlFile: {path: ../../05_rollbacks/01_ddl/04_alter/023_recovery_session_security.rollback.sql, relativeToChangelogFile: true}
+  - include:
+      file: 024_supported_language_de.changelog.yaml
+      relativeToChangelogFile: true
