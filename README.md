@@ -96,7 +96,7 @@ docker compose -p facelit-docker-compose --profile tooling run --rm liquibase ro
 
 On a disposable verification database or an approved maintenance target, `rollback-count --count=1` reverses the last changeset if its rollback is supported. Tags/history can help identify a release boundary. Preserve backups and application compatibility; do not remove existing volumes as an upgrade or troubleshooting step.
 
-The [rollback helper](scripts/rollback-by-id.ps1) and [reapply helper](scripts/reapply-after-rollback.ps1) are executable tools, not documentation to delete. Their inherited defaults reference a different project, so explicitly select `facelit-docker-compose`, the intended user/database and preview mode when inspecting their use. They do not replace review of dependencies or authorization for a destructive operation. This README correction does not alter these utilities or their behavior.
+The [rollback helper](scripts/rollback-by-id.ps1) and [reapply helper](scripts/reapply-after-rollback.ps1) are executable tools. Their default project is `facelit-docker-compose`; the rollback helper defaults to user `facelit_user` and database `facelit-db`, matching the development Compose defaults. Override these parameters when your environment uses different values, and select preview mode before considering execution. Existing confirmation, dependency checks and rollback/reapply logic are preserved. Generated SQL previews belong in ignored `.tmp/`, not in Git.
 
 When introducing new database changes, create a new changeset and preserve applied ones. Validate the entire include chain and test forward/reverse behavior in an isolated database. Do not renumber files, clear checksums or mark changes as applied merely to hide a mismatch.
 
@@ -106,6 +106,6 @@ The backend uses Hibernate validation and does not apply Liquibase automatically
 
 For acceptance, record the database commit and changelog status, test a fresh disposable database, and verify the coordinated application's login and relevant academic/facial/attendance flows. Migration success alone is not an application login test.
 
-This README is the single maintained explanatory document. SQL, YAML changelogs, rollback scripts, configuration examples, Dockerfiles and executable utilities remain in place because they are functional inputs. This correction modifies documentation only; it does not change schemas, migrations, roles, seed records or installed data.
+This README is the single maintained explanatory document. Active SQL, YAML changelogs, rollback scripts, configuration examples, Dockerfiles and executable utilities remain in place because they are functional inputs. Repository cleanup aligns tooling names with FaceLit and removes an unrelated generated SQL preview; it does not change schemas, migrations, roles, seed records or installed data.
 
 Related repositories: [backend](https://github.com/FaceID-Proyect-2026/FaceLit-Backend), [frontend](https://github.com/FaceID-Proyect-2026/FaceLit), [facial service](https://github.com/FaceID-Proyect-2026/micro-facial).

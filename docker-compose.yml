@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: docker/liquibase/Dockerfile
-    image: shopping-cart-liquibase:5.0.2
+    image: facelit-liquibase:5.0.2
     profiles:
       - tooling
     depends_on:
