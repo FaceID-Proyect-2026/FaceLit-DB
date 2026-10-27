@@ -11,3 +11,7 @@ databaseChangeLog:
   - include:
       file: 04_tcl/changelog.yaml
       relativeToChangelogFile: true
+  # Run after historical seeds and patches, which retain their original column names.
+  - include:
+      file: 06_migrations/001_english_nomenclature.changelog.yaml
+      relativeToChangelogFile: true
