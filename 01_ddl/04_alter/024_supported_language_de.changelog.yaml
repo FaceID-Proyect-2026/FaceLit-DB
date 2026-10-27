@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-supported-language-de
+      author: facelit
+      changes:
+        - sqlFile:
+            path: 024_supported_language_de.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/024_supported_language_de.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: false
