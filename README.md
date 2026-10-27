@@ -4,6 +4,48 @@ PostgreSQL 16 and Liquibase migrations for FaceLit academic attendance. This rep
 
 ## Architecture and active schema
 
+This repository owns the data layer of the coordinated three-layer application.
+The backend and facial service continue using the same PostgreSQL schema and
+relations. Architecture cleanup in their code does not rename or rewrite applied
+SQL, Liquibase paths, IDs, include order or checksums here.
+
+### H-50: English schema nomenclature
+
+`06_migrations/001_english_nomenclature.changelog.yaml` runs **after** historical
+seeds and patches. It adds two new changesets; previously applied SQL is unchanged.
+The final schema uses `role_name`, `description`, `assigned_at`, the foreign key
+`fk_facial_event_apprentice`, and categories `SECURITY`, `ACADEMIC`, `ATTENDANCE`,
+`FACIAL_RECOGNITION`, `TRANSFER`. It preserves row IDs, values and assignment times.
+
+For a staged rollout, first run `liquibase update --label-filter="!nomenclature-contract"`
+through the existing Compose tooling service. Expansion keeps both column names
+writable using synchronization triggers and accepts both category vocabularies.
+Deploy the frontend category reader and backend JPA/catalog changes while expanded.
+After all backend writers use the canonical names, run ordinary `liquibase update`
+to contract: legacy columns/triggers are removed and existing categories translated.
+An ordinary update applies both stages, so stop old backends first during a
+coordinated maintenance upgrade. Do not contract while legacy backend instances run.
+
+Rollback of the last changeset restores the expanded state and synchronization;
+rollback of both restores legacy names and category values. Coordinate application
+versions before rollback. `./scripts/test-nomenclature-migration.ps1` tests existing
+data, both writer versions, constraints, both rollbacks and reapply in a unique
+disposable PostgreSQL project. It never targets the installed database.
+
+For an opt-in integration check on Windows, run
+`./scripts/test-architecture-e2e.ps1`. It requires Docker and the sibling backend and
+microservice checkouts. It builds a facial image (or accepts
+`-SkipImageBuild -MicroImage <existing-image>`), creates a unique temporary Docker project and uses
+loopback ports 55439/18090/18080. It refuses occupied ports, applies existing migrations,
+runs real HTTP/JWT/SQL flows, and removes only its own containers and test volume.
+`-Browser` also exports the sibling frontend and checks its web UI on port 18081;
+Playwright must be available or supplied via `-PlaywrightModule <module-path>`.
+Use `-WebExport <directory>` only to reuse an export built from the same working
+tree and `EXPO_PUBLIC_API_URL=http://127.0.0.1:18080`, instead of rebuilding it.
+The facial inference engine and mail sender are controlled fixtures in this check;
+physical-camera recognition and actual email delivery require separate acceptance.
+Logs and browser captures are written under ignored `.tmp/<test-project>/`.
+
 | Schema | Responsibility |
 | --- | --- |
 | `security` | Application users, credentials, recovery/session/configuration and account-access changes |
@@ -24,6 +66,7 @@ FaceLit-DB/
   03_dcl/        Role, grant and policy changelog slots
   04_tcl/        Transaction/recovery changelog slots
   05_rollbacks/  Referenced reversal scripts
+  06_migrations/ Coordinated schema evolution after historical seeds and patches
   docker/        Liquibase image with the PostgreSQL JDBC driver
   scripts/       Existing rollback/reapply utilities
   docker-compose.yml
