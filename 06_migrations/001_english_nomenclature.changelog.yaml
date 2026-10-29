@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-h50-english-nomenclature-expand
+      author: facelit
+      labels: nomenclature-expand
+      changes:
+        - sqlFile:
+            path: 001_english_nomenclature_expand.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 001_english_nomenclature_sync.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+      rollback:
+        - sqlFile:
+            path: ../05_rollbacks/06_migrations/001_english_nomenclature_expand.rollback.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: facelit-h50-english-nomenclature-contract
+      author: facelit
+      labels: nomenclature-contract
+      changes:
+        - sqlFile:
+            path: 001_english_nomenclature_contract.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: ../05_rollbacks/06_migrations/001_english_nomenclature_contract.rollback.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 001_english_nomenclature_sync.sql
+            relativeToChangelogFile: true
+            splitStatements: false
