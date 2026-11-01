@@ -128,6 +128,14 @@ Inference is deterministic and email is mocked. HTTP, JWT, liveness rules, repos
 
 See the sibling backend's `docs/HU46_E2E_QA.md` for the review scope, execution results and remaining acceptance evidence. Integration into main still requires the team's reviewed PR; recovering this script locally does not itself close that delivery requirement or the separate CI integration point.
 
+The standalone PowerShell regression for restoring process environment variables in the bootstrap and E2E runners can be run without Docker:
+
+```powershell
+.\scripts\tests\test-environment-restoration.ps1
+```
+
+It checks success/error cleanup, variables that were absent, pre-existing values, and that both runners restore from `finally`. The E2E runner's actual early-error path was also exercised with its test port deliberately occupied; it restored the environment and started no containers. These are script regressions; they do not rerun Liquibase or the HTTP integration flow.
+
 The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
 
 For acceptance, record the database commit and changelog status, test a fresh disposable database, and verify the coordinated application's login and relevant academic/facial/attendance flows. Migration success alone is not an application login test.

@@ -5,6 +5,7 @@ param(
     [string]$EvidenceDirectory
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib/Restore-ProcessEnvironment.ps1')
 $databasePath = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $backendPath = (Resolve-Path $BackendRepository).Path
 if (!$MavenCommand) { $MavenCommand = Join-Path $backendPath 'mvnw.cmd' }
@@ -99,7 +100,7 @@ try {
     Test-Bootstrap 'upgrade' 'facelit_bootstrap_upgrade'
     "PASS: fresh creation, compatible upgrade, coordinator rotation, unchanged historical checksum. Evidence: $evidence"
 } finally {
-    foreach ($key in $previous.Keys) { [Environment]::SetEnvironmentVariable($key,$previous[$key],'Process') }
+    Restore-ProcessEnvironment -Snapshot $previous
     $settings.FACELIT_BOOTSTRAP_LEGACY_HASH = $null
     $settings.FACELIT_COORDINATOR_PASSWORD = $null
     if ($created) {

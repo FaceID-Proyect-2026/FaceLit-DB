@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib/Restore-ProcessEnvironment.ps1')
 $dbRoot = Split-Path $PSScriptRoot -Parent
 $workspace = Split-Path $dbRoot -Parent
 $backend = Join-Path $workspace 'FaceLit-Backend'
@@ -180,7 +181,5 @@ services:
             -LogPath (Join-Path $artifacts 'postgres.log') -Quiet -AllowFailure
         docker compose @composeArguments down --volumes --remove-orphans
     }
-    foreach ($name in $savedEnvironment.Keys) {
-        [Environment]::SetEnvironmentVariable($name, $savedEnvironment[$name], 'Process')
-    }
+    Restore-ProcessEnvironment -Snapshot $savedEnvironment
 }
