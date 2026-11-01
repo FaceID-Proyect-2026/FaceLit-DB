@@ -47,7 +47,11 @@ The table changelog defines the seven component groups. Alterations include acco
 
 [Index changes](01_ddl/10_indexes/0000changelog.yaml) are active. They cover role assignments, academic relationships, environment sessions, unread notifications, legal acceptance and facial attendance/template constraints. Additional constraints/indexes may also be defined inside table or alteration SQL.
 
-[Seed changes](02_dml/00_inserts/0000changelog.yaml) are active, including [seed.sql](02_dml/00_inserts/seed.sql) and the initial coordinator changeset. They are not an assertion that no initial data exists. Do not publish personal credentials or infer a seed account's plaintext password from a stored hash; obtain authorized access through the operator.
+[Seed changes](02_dml/00_inserts/0000changelog.yaml) retain [seed.sql](02_dml/00_inserts/seed.sql) for roles and permissions. The obsolete `02-seed-coordinator` account changeset and its credential-bearing SQL/rollback files have been retired from the active tree. A fresh migration does not create a user account. Create the first coordinator through the backend's private one-time configuration.
+
+For an already migrated database, keep its historical `DATABASECHANGELOG` entry and checksum: do not delete the account, reset checksums or recreate the database. The remaining schema changesets are unchanged. Update to this changelog, then use `FaceLit-Backend/scripts/initialize-coordinator.ps1 -Mode Rotate` with the existing coordinator's document/email and a new password entered privately. Its IDs and history remain intact; sessions and recovery authorizations are invalidated. Historical credential material remains in old Git commits, so removing current files is not proof of rotation in any real environment. The retired account changeset is no longer a rollback target in the active changelog; use reviewed backups/recovery procedures instead of deleting an established coordinator.
+
+Run [scripts/test-coordinator-bootstrap.ps1](scripts/test-coordinator-bootstrap.ps1) with Docker and the sibling backend to verify a fresh database and an upgrade from the pinned historical baseline. The test uses two temporary databases on loopback port 55447, checks unchanged historical metadata and login after rotation, and removes its own container. It does not operate on the normal database. Its historical baseline archive is test evidence, not a deployment input or a file to publish.
 
 Several dedicated object families and DCL/TCL slots currently contain empty `databaseChangeLog` lists. Their presence describes extension points, not implemented views, functions, policies or recovery operations. Conversely, populated indexes and seeds must not be described as unused placeholders.
 
@@ -109,6 +113,28 @@ The `database-migration-logs` artifact preserves command output. Bash pipefail p
 For HU-MEJ-006 acceptance, record the exact head SHA and green Actions run, inspect its artifact, verify the required check and independent approval, and retain failed-check blocking evidence. Earlier runs and reports remain historical evidence only; new migrations must be assessed on the branch that actually contains them.
 
 ## Integration, verification and documentation policy
+
+### Isolated cross-repository HTTP verification (HU46)
+
+From this repository in PowerShell, with Docker running and the four sibling repositories available:
+
+```powershell
+.\scripts\test-architecture-e2e.ps1
+```
+
+The runner was recovered from `hu-44-dev` without merging that branch. It uses the current working trees, builds the facial image, applies this checkout's Liquibase chain on a separate PostgreSQL database, starts the test-only FastAPI inference fixture, and runs the backend's `ArchitectureFlowPostgresIT`. Ports `55439`, `18090`, `18080` and (for browser mode) `18081` must be free. It never targets the normal database on port 5439. Only containers, network and volumes created under its unique `facelit-arch-e2e-*` project are removed at completion; logs and revision metadata remain under ignored `.tmp/<project>/`.
+
+Inference is deterministic and email is mocked. HTTP, JWT, liveness rules, repositories and PostgreSQL are exercised; camera recognition accuracy, production connectivity and facial inference latency are not certified by this test. Optional `-Browser` requires existing Playwright tooling and a browser; it is not enabled by default. `-MavenCommand` selects an installed Maven executable. `-SkipImageBuild -MicroImage <image>` reuses an existing compatible image while mounting the current microservice application and test fixture.
+
+See the sibling backend's `docs/HU46_E2E_QA.md` for the review scope, execution results and remaining acceptance evidence. Integration into main still requires the team's reviewed PR; recovering this script locally does not itself close that delivery requirement or the separate CI integration point.
+
+The standalone PowerShell regression for restoring process environment variables in the bootstrap and E2E runners can be run without Docker:
+
+```powershell
+.\scripts\tests\test-environment-restoration.ps1
+```
+
+It checks success/error cleanup, variables that were absent, pre-existing values, and that both runners restore from `finally`. The E2E runner's actual early-error path was also exercised with its test port deliberately occupied; it restored the environment and started no containers. These are script regressions; they do not rerun Liquibase or the HTTP integration flow.
 
 The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
 
