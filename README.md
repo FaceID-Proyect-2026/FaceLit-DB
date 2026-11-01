@@ -114,6 +114,20 @@ For HU-MEJ-006 acceptance, record the exact head SHA and green Actions run, insp
 
 ## Integration, verification and documentation policy
 
+### Isolated cross-repository HTTP verification (HU46)
+
+From this repository in PowerShell, with Docker running and the four sibling repositories available:
+
+```powershell
+.\scripts\test-architecture-e2e.ps1
+```
+
+The runner was recovered from `hu-44-dev` without merging that branch. It uses the current working trees, builds the facial image, applies this checkout's Liquibase chain on a separate PostgreSQL database, starts the test-only FastAPI inference fixture, and runs the backend's `ArchitectureFlowPostgresIT`. Ports `55439`, `18090`, `18080` and (for browser mode) `18081` must be free. It never targets the normal database on port 5439. Only containers, network and volumes created under its unique `facelit-arch-e2e-*` project are removed at completion; logs and revision metadata remain under ignored `.tmp/<project>/`.
+
+Inference is deterministic and email is mocked. HTTP, JWT, liveness rules, repositories and PostgreSQL are exercised; camera recognition accuracy, production connectivity and facial inference latency are not certified by this test. Optional `-Browser` requires existing Playwright tooling and a browser; it is not enabled by default. `-MavenCommand` selects an installed Maven executable. `-SkipImageBuild -MicroImage <image>` reuses an existing compatible image while mounting the current microservice application and test fixture.
+
+See the sibling backend's `docs/HU46_E2E_QA.md` for the review scope, execution results and remaining acceptance evidence. Integration into main still requires the team's reviewed PR; recovering this script locally does not itself close that delivery requirement or the separate CI integration point.
+
 The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
 
 For acceptance, record the database commit and changelog status, test a fresh disposable database, and verify the coordinated application's login and relevant academic/facial/attendance flows. Migration success alone is not an application login test.
