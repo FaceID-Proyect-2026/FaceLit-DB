@@ -42,7 +42,7 @@ The master includes these layers in order:
 
 1. [DDL](01_ddl/changelog.yaml): extensions, schemas and dedicated type slots, tables, alterations, remaining object-family slots, then indexes.
 2. [DML](02_dml/changelog.yaml): the configured insert/update/delete/upsert/patch changelogs.
-3. [DCL](03_dcl/changelog.yaml): the configured role/grant/policy slots.
+3. [DCL](03_dcl/changelog.yaml): the micro-facial non-login group role and restricted grants on facial templates and reset authorization fields.
 4. [TCL](04_tcl/changelog.yaml): the configured transaction/recovery slots.
 
 The table changelog defines the seven component groups. Alterations include account-access fields, notification catalog changes, facial reset authorization, session times, email-only reminders and subsequent corrections. Follow include order; numerical filenames alone do not determine execution order.
@@ -55,7 +55,7 @@ For an already migrated database, keep its historical `DATABASECHANGELOG` entry 
 
 Run [scripts/test-coordinator-bootstrap.ps1](scripts/test-coordinator-bootstrap.ps1) with Docker and the sibling backend to verify a fresh database and an upgrade from the pinned historical baseline. The test uses two temporary databases on loopback port 55447, checks unchanged historical metadata and login after rotation, and removes its own container. It does not operate on the normal database. Its historical baseline archive is test evidence, not a deployment input or a file to publish.
 
-Several dedicated object families and DCL/TCL slots currently contain empty `databaseChangeLog` lists. Their presence describes extension points, not implemented views, functions, policies or recovery operations. Conversely, populated indexes and seeds must not be described as unused placeholders.
+Several dedicated object families and TCL slots currently contain empty `databaseChangeLog` lists. Their presence describes extension points, not implemented views, functions, policies or recovery operations. Conversely, populated indexes, seeds and the micro-facial DCL must not be described as unused placeholders.
 
 ## Prerequisites and local configuration
 
@@ -71,6 +71,17 @@ Copy [.env.example](.env.example) to `.env` only if a local file does not alread
 | `POSTGRES_PORT` | Host port, normally 5439 in this development topology |
 
 Example values are development configuration, not production credentials. From a host process, connect to the configured localhost port. Other containers on the same Compose network use `postgres:5432`, not the host-mapped port. Backend JDBC and micro-facial SQLAlchemy URLs must point to the same intended environment where that is the current integration contract.
+
+### Micro-facial runtime login
+
+The DCL creates `facelit_micro_facial` as a non-login group and grants only the columns needed to compare/store facial templates and consume reset approvals. The database admin used by Liquibase must be allowed to create roles. After applying migrations, provision the login from this directory:
+
+```powershell
+# Load FACELIT_MICRO_DB_PASSWORD from the environment's secret manager.
+./scripts/provision_micro_facial_login.ps1
+```
+
+Set `DATABASE_URL` in micro-facial to `facelit_micro_runtime` using the same password. Keep the backend and Liquibase on their separate accounts. For an existing deployment, provision the role and verify the connection before switching micro-facial; do not revoke the shared account until the service is healthy on the restricted login.
 
 ## Start and migrate with Docker
 
@@ -108,6 +119,17 @@ When introducing new database changes, create a new changeset and preserve appli
 
 ## Continuous integration
 
+HU-48 adds security lookup indexes and accepts ISO `PT` while retaining legacy
+`PR` during transition. Existing PR preferences are migrated to PT; rollback
+restores PR. These are new changesets rather than changes to applied SQL.
+
+A default `update` applies the nomenclature expand phase and leaves legacy
+columns available. The destructive contract requires
+`update --context-filter=nomenclature-contract`, after all consumers have
+migrated and a recoverable backup exists. Its rollback also requires that
+context. The migration regression verifies default expand, both writers,
+explicit contract, each rollback and reapplication with existing data.
+
 The [CI workflow](.github/workflows/ci.yml) runs on pull requests and pushes to develop, dev, qa and main, with optional manual dispatch. Its `PostgreSQL and Liquibase integration` job starts a disposable PostgreSQL instance with dummy CI credentials, runs Liquibase `validate`, `update` and `status --verbose`, and removes only the runner's temporary environment at completion. It does not connect to the installed development or production database.
 
 The `database-migration-logs` artifact preserves command output. Bash pipefail prevents log capture from hiding a Liquibase failure. This checks the active migration chain on a fresh database; it does not certify every rollback, an upgrade of existing production data or application login. It produces migration evidence rather than a source-code coverage percentage.
@@ -138,7 +160,7 @@ The standalone PowerShell regression for restoring process environment variables
 
 It checks success/error cleanup, variables that were absent, pre-existing values, and that both runners restore from `finally`. The E2E runner's actual early-error path was also exercised with its test port deliberately occupied; it restored the environment and started no containers. These are script regressions; they do not rerun Liquibase or the HTTP integration flow.
 
-The backend uses Hibernate validation and does not apply Liquibase automatically. The current facial service also queries academic/security/environment relationships when resolving owners and session candidates; separation of database ownership is a distinct architectural change. Apply compatible database changes before starting those services.
+The backend uses Hibernate validation and does not apply Liquibase automatically. Spring resolves owners and authorized session candidates; the facial service receives those IDs and uses only facial tables through its restricted runtime login. Apply compatible database changes before starting those services.
 
 For acceptance, record the database commit and changelog status, test a fresh disposable database, and verify the coordinated application's login and relevant academic/facial/attendance flows. Migration success alone is not an application login test.
 

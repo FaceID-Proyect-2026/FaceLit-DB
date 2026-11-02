@@ -18,6 +18,7 @@ databaseChangeLog:
   - changeSet:
       id: facelit-h50-english-nomenclature-contract
       author: facelit
+      context: "@nomenclature-contract"
       labels: nomenclature-contract
       changes:
         - sqlFile:

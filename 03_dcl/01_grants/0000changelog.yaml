@@ -1,1 +1,17 @@
-databaseChangeLog: []
+databaseChangeLog:
+  - changeSet:
+      id: facelit-micro-facial-runtime-grants
+      author: facelit
+      labels: dcl,grant,facialrecognition
+      changes:
+        - sqlFile:
+            path: 001_micro_facial_runtime_grants.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/001_micro_facial_runtime_grants.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false

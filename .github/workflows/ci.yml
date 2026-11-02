@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout DB migrations
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Prepare migration logs
         run: mkdir -p ci-logs
@@ -47,7 +49,7 @@ jobs:
           docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT row_to_json(r) FROM roleandpermission.role r ORDER BY id_role' > ci-logs/roles-before.json
           docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT count(*) FROM databasechangelog' > ci-logs/changesets-before.txt
 
-      # Exercise the latest expand/contract pair; this is not a full-history rollback.
+      # Exercise the last two default changesets; contract requires an explicit context.
       - name: Roll back the last two changesets and reapply
         run: |
           docker compose run --rm liquibase rollback-count --count=2 2>&1 | tee ci-logs/rollback.log
@@ -62,6 +64,14 @@ jobs:
           diff -u ci-logs/schema-before.sql ci-logs/schema-after.sql
           diff -u ci-logs/roles-before.json ci-logs/roles-after.json
           diff -u ci-logs/changesets-before.txt ci-logs/changesets-after.txt
+
+      - name: Verify expand and explicit contract with legacy data
+        shell: pwsh
+        run: ./scripts/test-nomenclature-migration.ps1 | Tee-Object -FilePath ci-logs/nomenclature-scenarios.log
+
+      - name: Verify recovery migration upgrade rollback and reapply
+        shell: pwsh
+        run: ./scripts/test-hu002-migration.ps1 | Tee-Object -FilePath ci-logs/recovery-scenarios.log
 
       - name: Capture Docker logs on failure
         if: failure()

@@ -1,5 +1,12 @@
 databaseChangeLog:
   - changeSet:
+      id: facelit-hu48-security-lookup-indexes
+      author: facelit
+      changes:
+        - sqlFile: {path: 009_security_lookup_indexes.sql, relativeToChangelogFile: true}
+      rollback:
+        - sqlFile: {path: ../../05_rollbacks/01_ddl/10_indexes/009_security_lookup_indexes.rollback.sql, relativeToChangelogFile: true}
+  - changeSet:
       id: facelit-indexes-roleandpermission
       author: facelit
       labels: "ddl,indexes,roleandpermission"

@@ -112,6 +112,15 @@ services:
     Invoke-NativeLogged -Executable docker -NativeArguments (@('compose') + $composeArguments + @('--profile','tooling','run','--rm','liquibase','update')) `
         -LogPath (Join-Path $artifacts 'liquibase-update.log')
 
+    @'
+CREATE ROLE facelit_micro_runtime LOGIN PASSWORD 'architecture-micro-test-only';
+GRANT facelit_micro_facial TO facelit_micro_runtime;
+'@ | docker compose @composeArguments exec -T postgres psql -U $env:POSTGRES_USER -d $env:POSTGRES_DB -v ON_ERROR_STOP=1
+    Assert-NativeSuccess 'Provision isolated restricted facial runtime'
+    Get-Content -Raw -LiteralPath (Join-Path $dbRoot 'tests/nomenclature/runtime-contract.sql') |
+        docker compose @composeArguments exec -T postgres psql -U $env:POSTGRES_USER -d $env:POSTGRES_DB -v ON_ERROR_STOP=1
+    Assert-NativeSuccess 'Require isolated facial database boundary'
+
     if (-not $SkipImageBuild) {
         docker build -t $MicroImage $micro
         Assert-NativeSuccess 'Build facial test image'
@@ -121,7 +130,7 @@ services:
         --mount "type=bind,source=$(Join-Path $micro 'app'),target=/app/app,readonly" `
         --mount "type=bind,source=$(Join-Path $micro 'tests/support'),target=/e2e,readonly" `
         -e PYTHONPATH=/app -e API_KEY=architecture-test-key -e PRELOAD_MODEL=false `
-        -e DATABASE_URL=postgresql+asyncpg://facelit_arch:architecture-e2e-local-only@postgres:5432/facelit_arch `
+        -e DATABASE_URL=postgresql+asyncpg://facelit_micro_runtime:architecture-micro-test-only@postgres:5432/facelit_arch `
         $MicroImage uvicorn e2e_app:app --app-dir /e2e --host 0.0.0.0 --port 8090
     Assert-NativeSuccess 'Start isolated facial fixture'
     $ready = $false
