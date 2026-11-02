@@ -1,5 +1,7 @@
 # FaceLit database
 
+# Documentación : https://github.com/FaceID-Proyect-2026/facelit-docs
+
 PostgreSQL 16 and Liquibase migrations for FaceLit academic attendance. This repository owns the versioned schema, indexes, seed changes and rollback definitions used by the backend and facial service. [changelog-master.yaml](changelog-master.yaml) is the active deployment entry point.
 
 ## Architecture and active schema
