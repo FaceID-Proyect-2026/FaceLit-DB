@@ -15,3 +15,6 @@ databaseChangeLog:
   - include:
       file: 06_migrations/001_english_nomenclature.changelog.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 06_migrations/002_privacy_notice_version.changelog.yaml
+      relativeToChangelogFile: true

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-privacy-notice-version
+      author: facelit
+      changes:
+        - sqlFile:
+            path: 002_privacy_notice_version.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: ../05_rollbacks/06_migrations/002_privacy_notice_version.rollback.sql
+            relativeToChangelogFile: true
