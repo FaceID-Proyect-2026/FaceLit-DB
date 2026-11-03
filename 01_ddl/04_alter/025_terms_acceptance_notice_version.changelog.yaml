@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-terms-acceptance-notice-version
+      author: facelit
+      labels: ddl,alter,legal
+      changes:
+        - sqlFile:
+            path: 025_terms_acceptance_notice_version.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/025_terms_acceptance_notice_version.rollback.sql
+            relativeToChangelogFile: true
