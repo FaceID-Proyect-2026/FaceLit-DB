@@ -44,6 +44,17 @@ The master includes these layers in order:
 2. [DML](02_dml/changelog.yaml): the configured insert/update/delete/upsert/patch changelogs.
 3. [DCL](03_dcl/changelog.yaml): the configured role/grant/policy slots.
 4. [TCL](04_tcl/changelog.yaml): the configured transaction/recovery slots.
+5. [Schema naming migrations](06_migrations/001_english_nomenclature.changelog.yaml): expand and contract run after historical seeds and patches.
+
+### Migration traceability
+
+| Requirement or decision | Changeset | Verification |
+| --- | --- | --- |
+| HU-002 · Persist recovery sessions in the database | [`facelit-hu-mej-002-recovery-session-security`](01_ddl/04_alter/0000changelog.yaml) | [HU-002 migration check](scripts/test-hu002-migration.ps1) |
+| Store authorization for facial re-registration | [`facelit-face-reset-authorization`](01_ddl/04_alter/017_face_reset_authorization.changelog.yaml) | [Database CI](.github/workflows/ci.yml) validates and applies the active changelog. This checks migration execution. |
+| H50 · Adopt English schema names in expand and contract phases | [`facelit-h50-english-nomenclature-expand` and `facelit-h50-english-nomenclature-contract`](06_migrations/001_english_nomenclature.changelog.yaml) | [Naming migration check](scripts/test-nomenclature-migration.ps1) and [contracted schema assertions](tests/nomenclature/contracted.sql) |
+
+Use the changeset ID to find its source and rollback declaration, then record the commit and the CI run or local check result when reviewing a migration. The table points to verification procedures rather than recording a new test run.
 
 The table changelog defines the seven component groups. Alterations include account-access fields, notification catalog changes, facial reset authorization, session times, email-only reminders and subsequent corrections. Follow include order; numerical filenames alone do not determine execution order.
 
