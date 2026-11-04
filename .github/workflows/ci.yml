@@ -41,6 +41,28 @@ jobs:
       - name: Check pending changesets
         run: docker compose run --rm liquibase status --verbose 2>&1 | tee ci-logs/status.log
 
+      - name: Record migrated schema and seed data
+        run: |
+          docker compose exec -T postgres pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --schema-only --no-owner --no-privileges | sed '/^\\restrict /d; /^\\unrestrict /d' > ci-logs/schema-before.sql
+          docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT row_to_json(r) FROM roleandpermission.role r ORDER BY id_role' > ci-logs/roles-before.json
+          docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT count(*) FROM databasechangelog' > ci-logs/changesets-before.txt
+
+      # Exercise the latest expand/contract pair; this is not a full-history rollback.
+      - name: Roll back the last two changesets and reapply
+        run: |
+          docker compose run --rm liquibase rollback-count --count=2 2>&1 | tee ci-logs/rollback.log
+          docker compose run --rm liquibase update 2>&1 | tee ci-logs/reapply.log
+          docker compose run --rm liquibase validate 2>&1 | tee ci-logs/revalidate.log
+
+      - name: Verify schema and seed preservation after rollback
+        run: |
+          docker compose exec -T postgres pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --schema-only --no-owner --no-privileges | sed '/^\\restrict /d; /^\\unrestrict /d' > ci-logs/schema-after.sql
+          docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT row_to_json(r) FROM roleandpermission.role r ORDER BY id_role' > ci-logs/roles-after.json
+          docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c 'SELECT count(*) FROM databasechangelog' > ci-logs/changesets-after.txt
+          diff -u ci-logs/schema-before.sql ci-logs/schema-after.sql
+          diff -u ci-logs/roles-before.json ci-logs/roles-after.json
+          diff -u ci-logs/changesets-before.txt ci-logs/changesets-after.txt
+
       - name: Capture Docker logs on failure
         if: failure()
         run: docker compose logs --no-color

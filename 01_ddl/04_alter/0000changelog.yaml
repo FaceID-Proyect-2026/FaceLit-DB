@@ -172,3 +172,6 @@ databaseChangeLog:
   - include:
       file: 024_supported_language_de.changelog.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 025_terms_acceptance_notice_version.changelog.yaml
+      relativeToChangelogFile: true
