@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: facelit-privacy-notice-version
+      author: facelit
+      # main has a historical changeset that already owns this column.
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+        - not:
+            - columnExists:
+                schemaName: legal
+                tableName: terms_acceptance
+                columnName: notice_version
+      changes:
+        - sqlFile:
+            path: 002_privacy_notice_version.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: ../05_rollbacks/06_migrations/002_privacy_notice_version.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: false
